@@ -1,18 +1,31 @@
-# [Movielity - Movies assistant]
+# [CovidInfoOnline]
 ## Participants 
-- Gabriel Naleźnik
+- Gabriel Naleźnik - team leader
 - Olga Kubiszyn
 - Wojciech Gomułka
 - Jan Zajda
 ### Do you need more people: No
-## Short description of the idea
-“Movielity” is a web application that gathers data from various external APIs about movies and reviews. It can browse movies database by given tags and sort them by ratings. That let users find movies exactly matched to their expectations. It can also check availability of movies on streaming platforms. No more searching across different places  - Movielity’s gonna do all stuff for you! Our app also rates reviews if they are positive to help you see what critics think about movies you want to watch.
+## Short description of the idea:
+CovidInfoOnline is web app that processes data about Covid19. You can choose country and display corresponding charts describing data like number of cases, deaths, recovered 
+or conducted tests. Moreover you can compare selected countries. It will have many additional features, such as:
+
 ## Features:
-- Movies browser
-- Sorting and filtering movies
-- Finding movie that matches user's desire
-- Checking availability on different platforms
-- Using machine learning to distinguish whether the review is positive or not
+- search bar allowing seeking for data by city name/country
+- displaying general data among different countries/cities on charts
+- short info about countries (population, etc.)
+- red bar with info from https://www.gov.pl/web page
+- predicting future cases, deaths and recovered with machine learning algorithms
+- saving predicted data in files ( *.txt, *.csv, *.json )
+- displaying number of tests among countries
+- showing correlation between daily new confirmed cases and sunny weather (Do people stay at home?)
+- displaying ”N” countries with most confirmed/deaths/recovered
+- checking if you have covid symptoms and your mood in correlation to covid statistics ( quiz!)
+- displaying percent number of patients having given symptom
+- tips, how to avoid being infected
+
 ## Technologies:
 - Django
-- Tensorflow
+- Tensorflow (For predicting future cases)
+- Covid data from - Novel Coronavirus (COVID-19) Cases, provided by JHU CSSE (https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data)
+- Description about countries from api: https://restcountries.eu/#api-endpoints-name
+
