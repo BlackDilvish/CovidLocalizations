@@ -1,31 +1,27 @@
-# [CovidInfoOnline]
+# [Covid localizations]
 ## Participants 
 - Gabriel Naleźnik - team leader
 - Olga Kubiszyn
 - Wojciech Gomułka
 - Jan Zajda
 ### Do you need more people: No
-## Short description of the idea:
-CovidInfoOnline is web app that processes data about Covid19. You can choose country and display corresponding charts describing data like number of cases, deaths, recovered 
-or conducted tests. Moreover you can compare selected countries. It will have many additional features, such as:
 
+## Short description of the idea:
+Covid localizations is web app that checks if you were near someone infected. You can load information about your locations from previous months and compare it with locations from infected people. You can also check potentially dangerous places close to your current position.
+ 		
 ## Features:
-- search bar allowing seeking for data by city name/country
-- displaying general data among different countries/cities on charts
-- short info about countries (population, etc.)
-- red bar with info from https://www.gov.pl/web page
-- predicting future cases, deaths and recovered with machine learning algorithms
-- saving predicted data in files ( *.txt, *.csv, *.json )
-- displaying number of tests among countries
-- showing correlation between daily new confirmed cases and sunny weather (Do people stay at home?)
-- displaying ”N” countries with most confirmed/deaths/recovered
-- checking if you have covid symptoms and your mood in correlation to covid statistics ( quiz!)
-- displaying percent number of patients having given symptom
-- tips, how to avoid being infected
+- User registration
+- Saving user’s localization history in database and checking if he had any contact with infected person (no automation in version 1.0, json has to be given by user, we will think of automating later)
+- User can set since when he is infected
+- Displaying probability if user was traveling by foot or using some type of vehicle 
+(e.g.: if user was travelling by bus he could have bigger chance to become infected)
+- Notifications (emails) with information about probable meeting with infected person in the past
+- Daily tips: how to avoid being infected!
+- Displaying your nearest distance from an infected person
+- Displaying dangerous localizations in leaflet maps widget 
 
 ## Technologies:
 - Django
-- Tensorflow (For predicting future cases)
-- Covid data from - Novel Coronavirus (COVID-19) Cases, provided by JHU CSSE (https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data)
-- Description about countries from api: https://restcountries.eu/#api-endpoints-name
+- Leaflet an open-source JavaScript library for mobile-friendly interactive maps (https://leafletjs.com/examples.html)
+- Google Takeout for localization data (https://takeout.google.com)
 
