@@ -1,0 +1,29 @@
+.side_bar {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(11, 109, 155);
+    overflow: hidden;
+    padding-top: 20px;
+}
+
+.side_bar a {
+    padding: 6px, 6px, 6px, 10px;
+    text-decoration: darksalmon;
+    color: rgb(230, 245, 22);
+    font-size: 24px;
+    display: block;
+    margin-left: 10px;
+}
+
+.side_bar a:hover {
+    color: limegreen;
+}
+
+.main{
+    margin-left: 160px;
+    padding: 10px;
+}   
