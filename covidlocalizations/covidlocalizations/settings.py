@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'localizator.apps.LocalizatorConfig',
-    'registration.apps.RegistrationConfig',
+    'register.apps.RegisterConfig',
 ]
 
 MIDDLEWARE = [
