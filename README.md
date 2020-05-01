@@ -60,7 +60,7 @@ Product backlog on Trello: https://trello.com/b/25mkJJVa/covid-localizations
 
 ### Week 7  (08.06-14.06):
 - Automated loading localization (without loading json file by hand)
-
+- Writing unittests for 95% of the code
 - Finishing previous tasks if obstacles are met
 
 ### Week 8 **[finish]**  (15.06-17.06):

@@ -16,7 +16,7 @@
     color: rgb(230, 245, 22);
     font-size: 24px;
     display: block;
-    margin-left: 10px;
+    text-align: center;
 }
 
 .side_bar a:hover {
@@ -27,3 +27,10 @@
     margin-left: 160px;
     padding: 10px;
 }   
+
+.footy{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
