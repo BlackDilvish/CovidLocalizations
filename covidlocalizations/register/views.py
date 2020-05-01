@@ -9,8 +9,11 @@ def register(response):
         if form.is_valid():
             form.save()
         
-        return redirect("/home")
+        return redirect("/login")
     else:
         form = RegisterForm()
 
     return render(response, "register/register.html", {"form": form})
+
+def loggedout(response):
+    return render(response, "register/loggedout.html", {})
