@@ -75,13 +75,15 @@ WSGI_APPLICATION = 'covidlocalizations.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+with open('covidlocalizations/dbpass.txt', 'r') as f:
+    password = f.read()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mnczwauv',
         'USER': 'mnczwauv',
-        'PASSWORD': 'CAcPt_CHx8tOLB7oKUmLqNrxEt3v4112',
+        'PASSWORD': password,
         'HOST': 'balarama.db.elephantsql.com',
         'PORT': '5432',
     }
