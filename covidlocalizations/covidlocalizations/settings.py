@@ -78,10 +78,15 @@ WSGI_APPLICATION = 'covidlocalizations.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mnczwauv',
+        'USER': 'mnczwauv',
+        'PASSWORD': 'CAcPt_CHx8tOLB7oKUmLqNrxEt3v4112',
+        'HOST': 'balarama.db.elephantsql.com',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
