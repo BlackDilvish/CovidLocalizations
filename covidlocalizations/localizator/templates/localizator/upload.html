@@ -1,0 +1,11 @@
+{% extends "localizator/base.html" %}
+
+{% block title %} Upload your file {% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url "upload" %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+{% endblock %}
