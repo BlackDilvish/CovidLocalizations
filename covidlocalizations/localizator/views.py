@@ -16,10 +16,10 @@ def upload(response):
         form = FileForm(response.POST, response.FILES)
         if form.is_valid():
             newfile = response.FILES['uplfile']
-            text = newfile.read()
-
-            #Przekierowuje do nowej strony wypelnionej tekstem
-            return HttpResponse(text)
+            text = json.load(newfile)
+            data = LocalizationsData(name=response.user.username, data=text)
+            data.save()
+            return render(response, 'localizator/uploaded.html', {})
     else:
         form = FileForm()
 
