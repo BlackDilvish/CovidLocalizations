@@ -9,7 +9,12 @@ def index(response):
 
 def home(response):
     name = response.user.username
-    return render(response, "localizator/home.html", {"name":name}) 
+    if LocalizationsData.objects.filter(name=name).count() == 0:
+        upload_info = "You haven't uploaded your json file yet!"
+    else:
+        upload_info = "You've already uploaded your localizations: "
+
+    return render(response, "localizator/home.html", {"name":name, "upload_info":upload_info}) 
 
 def upload(response):
     name = response.user.username
@@ -18,6 +23,7 @@ def upload(response):
         if form.is_valid():
             newfile = response.FILES['uplfile']
             text = json.load(newfile)
+            LocalizationsData.objects.filter(name=response.user.username).delete()
             data = LocalizationsData(name=response.user.username, data=text)
             data.save()
             return render(response, 'localizator/uploaded.html', {"name":name})
