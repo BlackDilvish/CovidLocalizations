@@ -1,1 +1,1 @@
-web: gunicorn CovidLocalizations.wsgi --log-file -
+web: gunicorn covidlocalizations.wsgi --log-file -
