@@ -1,5 +1,4 @@
 from django.contrib.postgres.fields import JSONField
-from django.db import models
 from django.db import migrations, models
 from datetime import date
 
