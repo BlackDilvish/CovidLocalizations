@@ -1,6 +1,4 @@
 django
 django-crispy-forms
 psycopg2-binary
-whitenoise
 gunicorn
-django-heroku

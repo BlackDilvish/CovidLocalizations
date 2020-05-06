@@ -25,7 +25,7 @@ SECRET_KEY = 'sfu$h)=-dqv6@lo8-sx4i#wr9)71&%nck5dj)de1ex!ys(@qjx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['still-beyond-69083.herokuapp.com']
+ALLOWED_HOSTS = ['covidlocalizations.herokuapp.com']
 
 
 # Application definition
@@ -50,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'covidlocalizations.urls'
