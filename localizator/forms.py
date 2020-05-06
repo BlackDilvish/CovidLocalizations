@@ -7,3 +7,4 @@ class StatusForm(forms.Form):
     check = forms.BooleanField(required=False)
     #start_date = forms.DateField(required=False)
     #end_date = forms.DateField(required=False)
+

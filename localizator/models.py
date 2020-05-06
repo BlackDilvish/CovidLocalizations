@@ -30,3 +30,4 @@ class HealthStatus(models.Model):
 
     def covid_end_date(self):
         return str(self.end_date)
+
