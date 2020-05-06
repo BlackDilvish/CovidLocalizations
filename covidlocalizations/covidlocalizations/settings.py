@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'localizator.apps.LocalizatorConfig',
     'register.apps.RegisterConfig',
+    'local_hist.apps.LocalHistConfig',
 ]
 
 MIDDLEWARE = [

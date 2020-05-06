@@ -1,0 +1,16 @@
+{% extends "localizator/base.html" %}
+
+{% block title %}Localization history{% endblock %}
+{% load crispy_forms_tags %}
+{% block head %}{% endblock %}
+{% block content %}
+	{% for item in output %}
+		{% for key, val in item.items %}
+			{{key}} {{val}} <br> 
+			{% if key == "endLongitude" or key == "Place'sLongitude"%}
+				<br> 
+			{% endif %}
+		{% endfor %}	 
+	{% endfor %}
+	<br>
+{% endblock %}

@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from local_hist import views as lh_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('localizator.urls')),
     path('register/', include('register.urls')),
     path('', include('django.contrib.auth.urls')),
+    path('local_hist/', lh_view.local_hist, name='local_hist'),
 ]
