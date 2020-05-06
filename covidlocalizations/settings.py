@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mnczwauv',
         'USER': 'mnczwauv',
-        'PASSWORD': password,
+        'PASSWORD': 'CAcPt_CHx8tOLB7oKUmLqNrxEt3v4112',
         'HOST': 'balarama.db.elephantsql.com',
         'PORT': '5432',
     }

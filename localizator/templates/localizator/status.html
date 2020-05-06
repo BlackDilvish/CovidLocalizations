@@ -1,0 +1,15 @@
+{% extends "localizator/base.html" %}
+
+{% block title %} Set your health status {% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url "status" %}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-success">Set status</button>
+    </form>
+    {% else %}
+    <p>You need to <a href="/login">log in</a> to upload your localization</p>
+    {% endif %}
+{% endblock %}

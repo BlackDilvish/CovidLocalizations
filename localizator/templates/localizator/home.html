@@ -5,7 +5,8 @@
 {% block content %}
     <h1>Home page</h1>
     {% if user.is_authenticated %}
-        {{upload_info}}
+        <p>{{upload_info}}</p>
+        <p>{{status_info}}</p>
     {% endif %}
 {% endblock %}
 
