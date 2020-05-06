@@ -19,11 +19,19 @@ def upload(response):
     if response.method == 'POST':
         form = FileForm(response.POST, response.FILES)
         if form.is_valid():
-            newfile = response.FILES['uplfile']
-            text = json.load(newfile)
-            LocalizationsData.objects.filter(name=response.user.username).delete()
-            data = LocalizationsData(name=response.user.username, data=text)
-            data.save()
+            new_file = response.FILES['uplfile']
+            text = validate_json(new_file)
+
+            if not text:
+                return render(response, 'localizator/upload.html', {'form': FileForm(),
+                                                                    "error_json_message": get_error_validation()})
+            if check_for_label(text):
+                LocalizationsData.objects.filter(name=response.user.username).delete()
+                data = LocalizationsData(name=response.user.username, data=text)
+                data.save()
+            else:
+                return render(response, 'localizator/upload.html', {'form': FileForm(),
+                                                                    "error_json_message": get_error_format()})
 
             return render(response, 'localizator/uploaded.html', {"name":name})
     else:
@@ -65,3 +73,26 @@ def checkStatus(name):
         status_info = "You've been infected since " + HealthStatus.objects.get(name=name).covid_start_date()
         
     return status_info
+
+
+def validate_json(json_string):# thanks to: https://stackoverflow.com/questions/21334138/check-if-file-is-json-loadable
+    try:
+        text = json.load(json_string)
+        return text
+
+    except ValueError:
+        return False
+
+    return True
+
+
+def get_error_validation():
+    return "Unfortunately sent file is not valid json. Please, check your data."
+
+
+def get_error_format():
+    return "It seems that your file is valid JSON, but it does not contain required content"
+
+
+def check_for_label(text):
+    return 'timelineObjects' in text
