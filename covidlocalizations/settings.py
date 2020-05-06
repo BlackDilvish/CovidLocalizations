@@ -25,7 +25,7 @@ SECRET_KEY = 'sfu$h)=-dqv6@lo8-sx4i#wr9)71&%nck5dj)de1ex!ys(@qjx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['covidlocalizations.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'covidlocalizations.urls'
@@ -76,15 +77,13 @@ WSGI_APPLICATION = 'covidlocalizations.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-with open('covidlocalizations/dbpass.txt', 'r') as f:
-    password = f.read()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mnczwauv',
         'USER': 'mnczwauv',
-        'PASSWORD': password,
+        'PASSWORD': 'CAcPt_CHx8tOLB7oKUmLqNrxEt3v4112',
         'HOST': 'balarama.db.elephantsql.com',
         'PORT': '5432',
     }
@@ -128,7 +127,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 CRISPY_TEMPLATE_PACK="bootstrap4"
 
