@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import LocalizationsData, HealthStatus
 from .forms import FileForm, StatusForm
 from datetime import date
+
 import json
 
 def index(response):
@@ -10,6 +11,7 @@ def index(response):
 
 def home(response):
     name = response.user.username
+
     return render(response, "localizator/home.html", {"name":name, "upload_info":checkUpload(name), "status_info":checkStatus(name)}) 
 
 def upload(response):
@@ -44,6 +46,7 @@ def status(response):
             return render(response, "localizator/home.html", {"name":name, "upload_info":checkUpload(name), "status_info":checkStatus(name)}) 
     else:
         form = StatusForm()
+        
     return render(response, 'localizator/status.html', {"form":form, "name":name})
 
 def checkUpload(name):
@@ -60,4 +63,5 @@ def checkStatus(name):
         status_info = "You are healthy for now!"
     else:
         status_info = "You've been infected since " + HealthStatus.objects.get(name=name).covid_start_date()
+        
     return status_info
