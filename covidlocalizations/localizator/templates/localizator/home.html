@@ -4,4 +4,8 @@
 
 {% block content %}
     <h1>Home page</h1>
+    {% if user.is_authenticated %}
+        {{upload_info}}
+    {% endif %}
 {% endblock %}
+
