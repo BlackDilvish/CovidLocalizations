@@ -75,8 +75,6 @@ WSGI_APPLICATION = 'covidlocalizations.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-with open('covidlocalizations/dbpass.txt', 'r') as f:
-    password = f.read()
 
 DATABASES = {
     'default': {
