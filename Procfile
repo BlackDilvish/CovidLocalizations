@@ -1,0 +1,1 @@
+web: gunicorn covidlocalizations.wsgi:application --log-file -
