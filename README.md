@@ -28,6 +28,7 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 ## Advanced project description:
 
 Product backlog on Trello: https://trello.com/b/25mkJJVa/covid-localizations
+Url: https://covidlocalizations.herokuapp.com
 
 ### Week 1 (27.04-03.05):
 - Basic web page
