@@ -3,9 +3,13 @@
 {% block title %} Upload your file {% endblock %}
 
 {% block content %}
+    {% if user.is_authenticated %}
     <form method="post" action="{% url "upload" %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
+    {% else %}
+    <p>You need to <a href="/login">log in</a> to upload your localization</p>
+    {% endif %}
 {% endblock %}

@@ -12,6 +12,7 @@ def home(response):
     return render(response, "localizator/home.html", {"name":name}) 
 
 def upload(response):
+    name = response.user.username
     if response.method == 'POST':
         form = FileForm(response.POST, response.FILES)
         if form.is_valid():
@@ -19,8 +20,8 @@ def upload(response):
             text = json.load(newfile)
             data = LocalizationsData(name=response.user.username, data=text)
             data.save()
-            return render(response, 'localizator/uploaded.html', {})
+            return render(response, 'localizator/uploaded.html', {"name":name})
     else:
         form = FileForm()
 
-    return render(response, 'localizator/upload.html', {'form': form})
+    return render(response, 'localizator/upload.html', {'form': form, "name":name})
