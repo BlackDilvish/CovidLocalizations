@@ -1,1 +1,1 @@
-web: gunicorn covidlocalizations.wsgi --log-file -
+web: gunicorn covidlocalizations.wsgi -b 0.0.0.0:$PORT
