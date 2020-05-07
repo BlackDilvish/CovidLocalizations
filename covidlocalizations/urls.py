@@ -22,5 +22,5 @@ urlpatterns = [
     path('', include('localizator.urls')),
     path('register/', include('register.urls')),
     path('', include('django.contrib.auth.urls')),
-    path('local_hist/', lh_view.local_hist, name='local_hist'),
+    path('local_hist/', include('local_hist.urls')),
 ]

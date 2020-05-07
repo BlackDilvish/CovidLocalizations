@@ -1,11 +1,23 @@
 from django.shortcuts import render
 from localizator.models import LocalizationsData
+from django.http import HttpResponse
 
 def local_hist(response):
 	username = response.user.username	
 	hist = LocalizationsData.objects.filter(name = username)	
 	return render(response, 'local_hist/local_hist.html', {'name': username, 'output': history(hist)})
-	
+
+def visit(response, lat, long):
+	username = response.user.username
+	return render(response, 'local_hist/local_map.html', {'lat1': float(lat)/10e6,'long1': float(long)/10e6, 
+														  'name': username})
+
+def activity(response, lat1, long1, lat2, long2):
+	username = response.user.username
+	return render(response, 'local_hist/local_map.html', {'lat1': float(lat1)/10e6,'long1': float(long1)/10e6, 
+														  'lat2': float(lat2)/10e6,'long2': float(long2)/10e6,
+														  'name': username})
+
 def history(hist):
 	output = []
 	for item in hist:
