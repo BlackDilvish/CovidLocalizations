@@ -5,12 +5,17 @@
 {% block head %}{% endblock %}
 {% block content %}
 	{% for item in output %}
+
+		{% if item|length == 4 %}
+			<p>Visit place on <a href="/local_hist/visit/{{item.PlacesLatitude}}/{{item.PlacesLongitude}}">map</a></p>
+		{% else %}
+			<p>Activity on <a href="/local_hist/activity/{{item.startLatitude}}/{{item.startLongitude}}/{{item.endLatitude}}/{{item.endLongitude}}">map</a></p>
+		{% endif %}
+
 		{% for key, val in item.items %}
 			{{key}} {{val}} <br> 
-			{% if key == "endLongitude" or key == "Place'sLongitude"%}
-				<br> 
-			{% endif %}
-		{% endfor %}	 
+		{% endfor %}
+		<br><br>
 	{% endfor %}
 	<br>
 {% endblock %}
