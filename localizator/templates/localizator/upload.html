@@ -3,6 +3,9 @@
 {% block title %} Upload your file {% endblock %}
 
 {% block content %}
+    {% if error_json_message %}
+        <div class="alert alert-danger">{{error_json_message}}</div>
+    {% endif %}
     {% if user.is_authenticated %}
     <form method="post" action="{% url "upload" %}" enctype="multipart/form-data">
         {% csrf_token %}
