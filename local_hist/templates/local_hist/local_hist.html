@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% block head %}{% endblock %}
 {% block content %}
+{% if user.is_authenticated %}
 	{% for item in output %}
 
 		{% if item|length == 4 %}
@@ -18,4 +19,7 @@
 		<br><br>
 	{% endfor %}
 	<br>
+    {% else %}
+    <p>You need to <a href="/login">log in</a> to show your localizations history</p>
+{% endif %}
 {% endblock %}
