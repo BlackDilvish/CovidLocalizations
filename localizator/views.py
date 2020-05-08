@@ -11,7 +11,6 @@ def index(response):
 
 def home(response):
     name = response.user.username
-
     return render(response, "localizator/home.html", {"name":name, "upload_info":checkUpload(name), "status_info":checkStatus(name)}) 
 
 def upload(response):
@@ -56,6 +55,10 @@ def status(response):
         form = StatusForm()
         
     return render(response, 'localizator/status.html', {"form":form, "name":name})
+
+def instruction(response):
+    name = response.user.username
+    return render(response, "localizator/instruction.html", {"name":name})
 
 def checkUpload(name):
     if LocalizationsData.objects.filter(name=name).count() == 0:
