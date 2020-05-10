@@ -1,7 +1,7 @@
 <div id="mapid" style="width: 600px; height: 400px;"></div>
 <script>
 
-	var mymap = L.map('mapid').setView([{{lat1}}, {{long1}}], 13);
+	var mymap = L.map('mapid').setView([{{lat1}}, {{lon1}}], 13);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
@@ -13,9 +13,9 @@
 		zoomOffset: -1
 	}).addTo(mymap);
 	
-	var marker = L.marker([{{lat1}}, {{long1}}]).addTo(mymap);
+	var marker = L.marker([{{lat1}}, {{lon1}}]).addTo(mymap);
     {% if lat2 %}
-        var marker = L.marker([{{lat2}}, {{long2}}]).addTo(mymap);
+        var marker = L.marker([{{lat2}}, {{lon2}}]).addTo(mymap);
     {% endif %}
 
 </script>

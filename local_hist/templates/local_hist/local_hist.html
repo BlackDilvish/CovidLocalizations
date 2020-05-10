@@ -2,20 +2,29 @@
 
 {% block title %}Localization history{% endblock %}
 {% load crispy_forms_tags %}
-{% block head %}{% endblock %}
+{% block head %}
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+{% endblock %}
 {% block content %}
+<h1> Localization history </h1>
 {% if user.is_authenticated %}
 	{% for item in output %}
-
-		{% if item|length == 4 %}
-			<p>Visit place on <a href="/local_hist/visit/{{item.PlacesLatitude}}/{{item.PlacesLongitude}}">map</a></p>
+	
+		{% if item|length == 7 %}
+			<p>Visit place on <a href="/local_hist/visit/{{item.Places_latitude}}/{{item.Places_longitude}}">map</a></p>
 		{% else %}
-			<p>Activity on <a href="/local_hist/activity/{{item.startLatitude}}/{{item.startLongitude}}/{{item.endLatitude}}/{{item.endLongitude}}">map</a></p>
+			<p>Activity on <a href="/local_hist/activity/{{item.Start_latitude}}/{{item.Start_longitude}}/{{item.End_latitude}}/{{item.End_longitude}}">map</a></p>
 		{% endif %}
-
+		
+		<table>
 		{% for key, val in item.items %}
-			{{key}} {{val}} <br> 
+			<tr> <th>{{key}}</th> <td>{{val}}</td> </tr> 
 		{% endfor %}
+		</table>
 		<br><br>
 	{% endfor %}
 	<br>
