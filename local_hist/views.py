@@ -11,13 +11,13 @@ def local_hist(response):
 
 def visit(response, lat, lon):
 	username = response.user.username
-	return render(response, 'local_hist/local_map.html', {'lat1': lat,'lon1': lon, 'name': username})
+	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat,'lon1': lon, 'name': username})
 
 def activity(response, lat1, lon1, lat2, lon2):
 	username = response.user.username
-	return render(response, 'local_hist/local_map.html', {'lat1': lat1,'lon1': lon1, 
-								'lat2': lat2,'lon2': lon2,
-     							  	'name': username})
+	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat1,
+								'lon1': lon1, 'lat2': lat2,
+								'lon2': lon2, 'name': username})		  	
 
 def history(hist):
 	output = []
