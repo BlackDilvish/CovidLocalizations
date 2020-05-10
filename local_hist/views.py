@@ -26,48 +26,62 @@ def history(hist):
 			if "activitySegment" in item.data["timelineObjects"][i]:
 				act = {}
 				
-				act["Start_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["startTimestampMs"]
+				if "duration" in item.data["timelineObjects"][i]["activitySegment"] and "startTimestampMs" in item.data["timelineObjects"][i]["activitySegment"]["duration"]:
+					act["Start_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["startTimestampMs"]
 				
-				act["End_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["endTimestampMs"]
+				if "duration" in item.data["timelineObjects"][i]["activitySegment"] and "endTimestampMs" in item.data["timelineObjects"][i]["activitySegment"]["duration"]:  
+					act["End_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["endTimestampMs"]
 				 
-				act["Start_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["latitudeE7"]
+				if "startLocation" in item.data["timelineObjects"][i]["activitySegment"] and "latitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["startLocation"]: 
+					act["Start_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["latitudeE7"]
 				
-				act["Start_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["longitudeE7"]
+				if "startLocation" in item.data["timelineObjects"][i]["activitySegment"] and "longitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["startLocation"]: 
+					act["Start_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["longitudeE7"]
 				
-				act["End_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["latitudeE7"]
+				if "endLocation" in item.data["timelineObjects"][i]["activitySegment"] and "latitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["endLocation"]: 
+					act["End_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["latitudeE7"]
 				
-				act["End_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["longitudeE7"]
+				if "endLocation" in item.data["timelineObjects"][i]["activitySegment"] and "longitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["endLocation"]: 
+					act["End_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["longitudeE7"]
 				
-				act["Distance"] = str(item.data["timelineObjects"][i]["activitySegment"]["distance"]) #string zeby nie konwertowalo na wspolrzedne
+				if "distance" in item.data["timelineObjects"][i]["activitySegment"]:
+					act["Distance"] = str(item.data["timelineObjects"][i]["activitySegment"]["distance"]) #string zeby nie konwertowalo na wspolrzedne
+				if "activityType" in item.data["timelineObjects"][i]["activitySegment"]:
+					act["Activity_type"] = item.data["timelineObjects"][i]["activitySegment"]["activityType"]
 				
-				act["Activity_type"] = item.data["timelineObjects"][i]["activitySegment"]["activityType"]
-				
-				act["Probability"] = item.data["timelineObjects"][i]["activitySegment"]["activities"][0]["probability"]
+				if "activities" in item.data["timelineObjects"][i]["activitySegment"] and "probability" in item.data["timelineObjects"][i]["activitySegment"]["activities"][0]:
+					act["Probability"] = item.data["timelineObjects"][i]["activitySegment"]["activities"][0]["probability"]
 				
 				output.append(act)
 			else:
 				vis = {}
 				
-				vis["Start_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["startTimestampMs"]
+				if "duration" in item.data["timelineObjects"][i]["placeVisit"] and "startTimestampMs" in item.data["timelineObjects"][i]["placeVisit"]["duration"]:
+					vis["Start_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["startTimestampMs"]
 				
-				vis["End_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["endTimestampMs"]
+				if "duration" in item.data["timelineObjects"][i]["placeVisit"] and "endTimestampMs" in item.data["timelineObjects"][i]["placeVisit"]["duration"]:
+					vis["End_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["endTimestampMs"]
 				
-				vis["Places_latitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["latitudeE7"]
+				if "location" in item.data["timelineObjects"][i]["placeVisit"] and "latitudeE7" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
+					vis["Places_latitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["latitudeE7"]
 				
-				vis["Places_longitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["longitudeE7"]
+				if "location" in item.data["timelineObjects"][i]["placeVisit"] and "longitudeE7" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
+					vis["Places_longitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["longitudeE7"]
 				
-				vis["Address"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["address"]
+				if "location" in item.data["timelineObjects"][i]["placeVisit"] and "address" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
+					vis["Address"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["address"]
 				
-				vis["Location_confidence"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["locationConfidence"]
+				if "location" in item.data["timelineObjects"][i]["placeVisit"] and "locationConfidence" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
+					vis["Location_confidence"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["locationConfidence"]
 				
-				vis["Visit_confidence"] = float(item.data["timelineObjects"][i]["placeVisit"]["visitConfidence"]) 
+				if "visitConfidence" in item.data["timelineObjects"][i]["placeVisit"]:
+					vis["Visit_confidence"] = float(item.data["timelineObjects"][i]["placeVisit"]["visitConfidence"]) 
 				
 				output.append(vis)
 	return output
 	
 def convert(output):
 	for item in output:
-		print(item)
 		for key, val in item.items():
 			if key == "Start_time" or key == "End_time":
 				item[key] = datetime.utcfromtimestamp(int(val)/1000)
