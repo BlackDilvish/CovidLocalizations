@@ -9,6 +9,16 @@
     {% if user.is_authenticated %}
     <form method="post" action="{% url "upload" %}" enctype="multipart/form-data">
         {% csrf_token %}
+        <select name="choose_month">
+            {% for month in months%}
+                <option value={{month}}>{{month}}</option>
+            {% endfor %}
+        </select>
+        <select name="choose_year">
+            {% for year in years%}
+                <option value={{year}}>{{year}}</option>
+            {% endfor %}
+        </select>
         {{form.as_p}}
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
