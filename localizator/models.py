@@ -2,6 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 from datetime import date
 
+
 class LocalizationsData(models.Model):
     name = models.CharField(max_length=200)
     data = JSONField()
@@ -12,6 +13,7 @@ class LocalizationsData(models.Model):
 
     def date(self):
         return str(self.pub_date)
+
 
 class HealthStatus(models.Model):
     name = models.CharField(max_length=200)

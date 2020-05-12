@@ -9,15 +9,18 @@ def local_hist(response):
 	out = history(hist)
 	return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out)})
 
+
 def visit(response, lat, lon):
 	username = response.user.username
 	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat,'lon1': lon, 'name': username})
+
 
 def activity(response, lat1, lon1, lat2, lon2):
 	username = response.user.username
 	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat1,
 								'lon1': lon1, 'lat2': lat2,
 								'lon2': lon2, 'name': username})		  	
+
 
 def history(hist):
 	output = []
@@ -28,7 +31,8 @@ def history(hist):
 			else:
 				output.append(item_visit(item, i))
 	return output
-	
+
+
 def convert(output):
 	for item in output:
 		for key, val in item.items():
@@ -37,6 +41,7 @@ def convert(output):
 			elif isinstance(val, int):
 				item[key] = str(float(val)/10e6) #na stringa zeby mapa dzialala
 	return output
+
 		
 def item_activity(item, i):
 	act = {}			
@@ -67,6 +72,7 @@ def item_activity(item, i):
 		act["Probability"] = item.data["timelineObjects"][i]["activitySegment"]["activities"][0]["probability"]
 
 	return act
+
 
 def item_visit(item, i):
 	vis = {}
