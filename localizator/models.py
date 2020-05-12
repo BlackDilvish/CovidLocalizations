@@ -15,11 +15,9 @@ class LocalizationsData(models.Model):
     def date(self):
         return str(self.pub_date)
 
-<<<<<<< HEAD
-=======
     def json_file_date(self):
         return self.file_date
->>>>>>> e703db7ab8ded3bac2575f170210626088049c1b
+
 
 class HealthStatus(models.Model):
     name = models.CharField(max_length=200)

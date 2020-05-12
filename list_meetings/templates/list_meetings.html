@@ -6,15 +6,17 @@
             <tr>
                 <th>Lp.</th>
                 <th>Distance to person</th>
-                <th>Date</th>
+                <th>Begin date</th>
+                <th>End date</th>
                 <th>Link to map and detailed data</th>
             </tr>
-        {%for meeting in list_of_meetings%}
+        {%for meetings in list_of_meetings%}
             <tr>
                 <td>{{forloop.counter}}.</td>
-                <td>{{meeting['distance']}}</td>
-                <td>{{meeting['startTimestamps']}}</td>
-                <td><a href="{{meeting.id}}">Check details and map</a></td>
+                <td>{{meetings.distance}}</td>
+                <td>{{meetings.startTimestamp}}</td>
+                <td>{{meetings.endTimestamp}}</td>
+                <td><a href="{{meetings.id}}">Check details and map</a></td>
             </tr>
         {% endfor %}
         </table>
