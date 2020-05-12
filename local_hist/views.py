@@ -4,10 +4,21 @@ from django.http import HttpResponse
 from datetime import datetime
 
 def local_hist(response):
-	username = response.user.username	
-	hist = LocalizationsData.objects.filter(name = username)
-	out = history(hist)
-	return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out)})
+	username = response.user.username
+	months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+	years = [2019, 2020]
+	file_date = ""
+
+	if response.method == "POST":
+		month = response.POST.get("choose_month")
+		year = response.POST.get("choose_year")
+		file_date = month + str(year)
+
+	hist = LocalizationsData.objects.filter(name=username, file_date=file_date)
+	if len(hist):
+		out = history(hist)
+		return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out), "months": months, "years": years})
+	return render(response, 'local_hist/local_hist.html', {'name': username, "months": months, "years": years})
 
 
 def visit(response, lat, lon):

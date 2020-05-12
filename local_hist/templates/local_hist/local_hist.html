@@ -17,8 +17,22 @@ table, th, td {
 {% block content %}
 <h1> Localization history </h1>
 {% if user.is_authenticated %}
+	<form method="post" action="{% url "local_hist" %}" enctype="multipart/form-data">
+	{% csrf_token %}
+	<select name="choose_month">
+		{% for month in months %}
+			<option value={{month}}>{{month}}</option>
+		{% endfor %}
+	</select>
+	<select name="choose_year">
+		{% for year in years %}
+			<option value={{year}}>{{year}}</option>
+		{% endfor %}
+	</select>
+	{{form.as_p}}
+	<p><p></p><button type="submit" class="btn btn-success">Show</button></p></p>
+	</form>
 	{% for item in output %}
-	
 		{% if item|length == 7 %}
 			<!-- Visit place on <a href="/local_hist/visit/{{item.Places_latitude}}/{{item.Places_longitude}}">map</a> -->
 			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
@@ -35,7 +49,7 @@ table, th, td {
 		<br><br>
 	{% endfor %}
 	<br>
-    {% else %}
-    <p>You need to <a href="/login">log in</a> to show your localizations history</p>
+{% else %}
+<p>You need to <a href="/login">log in</a> to show your localizations history</p>
 {% endif %}
 {% endblock %}

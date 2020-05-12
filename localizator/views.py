@@ -20,6 +20,9 @@ def home(response):
 
 def upload(response):
     name = response.user.username
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    years = [2019, 2020]
+
     if response.method == 'POST':
         form = FileForm(response.POST, response.FILES)
         if form.is_valid():
@@ -28,20 +31,27 @@ def upload(response):
 
             if not text:
                 return render(response, 'localizator/upload.html', {'form': FileForm(), "name":name,
-                                                                    "error_json_message": get_error_validation()})
+                                                                    "error_json_message": get_error_validation(),
+                                                                    "months": months, "years": years})
             if check_for_label(text):
-                LocalizationsData.objects.filter(name=name).delete()
-                data = LocalizationsData(name=name, data=text)
+                month = response.POST.get("choose_month") 
+                year = response.POST.get("choose_year") 
+                file_date = month + str(year)
+                LocalizationsData.objects.filter(name=name, file_date=file_date).delete()
+                data = LocalizationsData(name=name, data=text, file_date=file_date)
                 data.save()
+
+                return render(response, 'localizator/uploaded.html', {"name":name})
+
             else:
                 return render(response, 'localizator/upload.html', {'form': FileForm(), "name":name,
-                                                                    "error_json_message": get_error_format()})
+                                                                    "error_json_message": get_error_format(),
+                                                                    "months": months, "years": years})
 
-            return render(response, 'localizator/uploaded.html', {"name":name})
     else:
         form = FileForm()
 
-    return render(response, 'localizator/upload.html', {'form':form, "name":name})
+    return render(response, 'localizator/upload.html', {'form':form, "name":name, "months": months, "years": years})
 
 
 def status(response):
@@ -89,7 +99,10 @@ def check_upload(name):
     if LocalizationsData.objects.filter(name=name).count() == 0:
         upload_info = "You haven't uploaded your json file yet!"
     else:
-        upload_info = "You've already uploaded your localizations: " + LocalizationsData.objects.get(name=name).date()
+        upload_info = "You've already uploaded your localizations from "
+        data = LocalizationsData.objects.filter(name=name)
+        for item in data:
+            upload_info += item.json_file_date() + "\n"
     return upload_info
 
 
