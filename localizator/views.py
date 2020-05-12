@@ -8,12 +8,15 @@ from datetime import datetime
 
 import json
 
+
 def index(response):
     return HttpResponse('Strona covid local <a href="/home">home</a>')
+
 
 def home(response):
     name = response.user.username
     return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)}) 
+
 
 def upload(response):
     name = response.user.username
@@ -50,6 +53,7 @@ def upload(response):
 
     return render(response, 'localizator/upload.html', {'form':form, "name":name, "months": months, "years": years})
 
+
 def status(response):
     name = response.user.username
     if response.method == 'POST':
@@ -85,10 +89,12 @@ def status(response):
     
     return render(response, 'localizator/status.html', {"name":name})
 
+
 def instruction(response):
     name = response.user.username
     return render(response, "localizator/instruction.html", {"name":name})
-    
+
+
 def check_upload(name):
     if LocalizationsData.objects.filter(name=name).count() == 0:
         upload_info = "You haven't uploaded your json file yet!"
@@ -98,6 +104,7 @@ def check_upload(name):
         for item in data:
             upload_info += item.json_file_date() + "\n"
     return upload_info
+
 
 def check_status(name):
     if HealthStatus.objects.filter(name=name).count() == 0:
@@ -111,6 +118,7 @@ def check_status(name):
         status_info = "You were infected from " + t.covid_start_date() + " to " +  t.covid_end_date()
         
     return status_info
+
 
 def convert_date(str_date):
     if str_date == "":
@@ -129,17 +137,22 @@ def validate_json(json_string):# thanks to: https://stackoverflow.com/questions/
 
     return True
 
+
 def get_error_validation():
     return "Unfortunately sent file is not valid json. Please, check your data."
+
 
 def get_error_format():
     return "It seems that your file is valid JSON, but it does not contain required content"
 
+
 def get_error_date():
     return "Selected dates are incorrect!"
 
+
 def check_for_label(text):
     return 'timelineObjects' in text
+
 
 def check_status_dates(start_date, end_date):
     return start_date <= end_date and start_date <= date.today() and end_date <= date.today()
