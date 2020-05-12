@@ -1,4 +1,4 @@
-from localizator.models import LocalizationsData
+from localizator.models import LocalizationsData, HealthStatus
 from django.shortcuts import render
 from datetime import datetime, timedelta
 import geopy.distance
@@ -9,13 +9,17 @@ def list_meetings(request):
     name = request.user.username
     contacts = get_contacts(name)
     prepare_contacts(contacts, name)
+    contacts.sort(key=by_distance)
     if len(contacts) > 10:
         contacts = contacts[:10]
     response_dict = dict()
-    #print(contacts[0])
     if contacts:
         response_dict = dict(list_of_meetings=contacts)
     return render(request, 'list_meetings.html', response_dict)
+
+
+def by_distance(contact):
+    return float(contact['distance'])
 
 
 def get_contacts(name):
@@ -24,6 +28,9 @@ def get_contacts(name):
 
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
+        #start_compare = localization['sra']
+        #end_compare = localization['']
+
         for timeline_object in timeline_objects:
             if 'activitySegment' in timeline_object:
                 add_activity(timeline_object, contacts)
@@ -56,8 +63,19 @@ def add_place(timeline_object, contacts):
 
 
 def get_localizations(name):
-    return list(LocalizationsData.objects.filter(pub_date__gte=(datetime.now() - timedelta(days=38))).
-                                                 exclude(name=name)[:10].values())
+    localizations = list(LocalizationsData.objects.filter(pub_date__gte=(datetime.now() - timedelta(days=38))).
+                                                 exclude(name=name).values())
+    for localization in localizations:#thanks to: https://stackoverflow.com/questions/5508888/matching-query-does-not-exist-error-in-django
+        try:
+            status = HealthStatus.objects.get(name=localization['name'])
+        except HealthStatus.DoesNotExist:
+            localizations.remove(localization)
+            continue
+
+        if status.status is False:
+            localizations.remove(localization)
+
+    return localizations
 
 
 def prepare_contacts(contacts, name):
@@ -77,6 +95,7 @@ def prepare_contacts(contacts, name):
                         contacts.remove(contact)
                         continue
                     distance = get_distance_place(contact, timeline_object['placeVisit'])
+
                 contact['distance'] = distance
 
 
