@@ -10,11 +10,13 @@ def list_meetings(request):
     contacts = get_contacts(name)
     prepare_contacts(contacts, name)
     contacts.sort(key=by_distance)
+
     if len(contacts) > 10:
         contacts = contacts[:10]
-    response_dict = dict()
+        
+    response_dict = {'name': name}
     if contacts:
-        response_dict = dict(list_of_meetings=contacts)
+        response_dict['list_of_meetings'] = contacts
     return render(request, 'list_meetings.html', response_dict)
 
 
@@ -28,8 +30,6 @@ def get_contacts(name):
 
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
-        #start_compare = localization['sra']
-        #end_compare = localization['']
 
         for timeline_object in timeline_objects:
             if 'activitySegment' in timeline_object:
@@ -42,30 +42,33 @@ def get_contacts(name):
 
 def add_activity(timeline_object, contacts):
     timeline_data = timeline_object['activitySegment']
-    start_date_first = timeline_data['duration']['startTimestampMs']
-    start_date_second = timeline_data['duration']['endTimestampMs']
-    end_date_first = start_date_first
-    end_date_second = start_date_second
+    start_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
+    start_date_second = start_date_first + timedelta(minutes=5)
+    end_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
+    end_date_second = end_date_first + timedelta(minutes=5)
 
     first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
                        endTimestamp=end_date_first)
     second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
                         endTimestamp=end_date_second)
+                        
     contacts.append(first_place)
     contacts.append(second_place)
 
 
 def add_place(timeline_object, contacts):
     timeline_data = timeline_object['placeVisit']
-    place = dict(location=timeline_data['location'], startTimestamp=timeline_data['duration']['startTimestampMs'],
-                 endTimestamp=timeline_data['duration']['endTimestampMs'])
+    start_time = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
+    end_time = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
+    place = dict(location=timeline_data['location'], startTimestamp=start_time,
+                 endTimestamp=end_time)
     contacts.append(place)
 
 
 def get_localizations(name):
     localizations = list(LocalizationsData.objects.filter(pub_date__gte=(datetime.now() - timedelta(days=38))).
                                                  exclude(name=name).values())
-    for localization in localizations:#thanks to: https://stackoverflow.com/questions/5508888/matching-query-does-not-exist-error-in-django
+    for localization in localizations:
         try:
             status = HealthStatus.objects.get(name=localization['name'])
         except HealthStatus.DoesNotExist:
@@ -96,11 +99,10 @@ def prepare_contacts(contacts, name):
                         continue
                     distance = get_distance_place(contact, timeline_object['placeVisit'])
 
-                contact['distance'] = distance
+                contact['distance'] = round(float(distance), 2)
 
 
-#calculations thanks to: https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
-def get_distance_place(contact, timeline_object): #conversion thanks to https://github.com/matthewrenze/google-location-scripts/blob/master/Convert.py
+def get_distance_place(contact, timeline_object):
     first_long = int(contact['location']['longitudeE7']) / 1E7
     first_lat = int(contact['location']['latitudeE7']) / 1E7
     second_long = int(timeline_object['location']['longitudeE7']) / 1E7

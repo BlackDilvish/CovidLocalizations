@@ -50,7 +50,7 @@ def convert(output):
 			if key == "Start_time" or key == "End_time":
 				item[key] = datetime.utcfromtimestamp(int(val)/1000)
 			elif isinstance(val, int):
-				item[key] = str(float(val)/10e6) #na stringa zeby mapa dzialala
+				item[key] = str(float(val)/10e6)
 	return output
 
 		
@@ -75,7 +75,7 @@ def item_activity(item, i):
 		act["End_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["longitudeE7"]
 	
 	if "distance" in item.data["timelineObjects"][i]["activitySegment"]:
-		act["Distance"] = str(item.data["timelineObjects"][i]["activitySegment"]["distance"]) #string zeby nie konwertowalo na wspolrzedne
+		act["Distance"] = str(item.data["timelineObjects"][i]["activitySegment"]["distance"])
 	if "activityType" in item.data["timelineObjects"][i]["activitySegment"]:
 		act["Activity_type"] = item.data["timelineObjects"][i]["activitySegment"]["activityType"]
 	

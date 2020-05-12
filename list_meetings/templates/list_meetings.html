@@ -13,7 +13,7 @@
         {%for meetings in list_of_meetings%}
             <tr>
                 <td>{{forloop.counter}}.</td>
-                <td>{{meetings.distance}}</td>
+                <td>{{meetings.distance}} km</td>
                 <td>{{meetings.startTimestamp}}</td>
                 <td>{{meetings.endTimestamp}}</td>
                 <td><a href="{{meetings.id}}">Check details and map</a></td>
