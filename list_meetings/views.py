@@ -120,7 +120,7 @@ def get_distance_activity(contact, timeline_object):
     second_lat = int(timeline_object['endLocation']['latitudeE7']) / 1E7
 
     third_long = int(contact['location']['longitudeE7']) / 1E7
-    third_lat = int(contact['location']['longitudeE7']) / 1E7
+    third_lat = int(contact['location']['latitudeE7']) / 1E7
 
     point1 = (first_long, first_lat)
     point2 = (second_long, second_lat)
