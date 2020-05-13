@@ -16,18 +16,22 @@ def list_meetings(request):
         month = request.POST.get("choose_month") 
         year = request.POST.get("choose_year") 
         file_date = month + str(year)
+
+        if len(LocalizationsData.objects.filter(name=name, file_date=file_date)) == 0:
+            return render(request, 'list_meetings.html', response_dict)
+
         contacts = get_contacts(name, file_date)
-        if prepare_contacts(contacts, name, file_date):
-            map_contacts_locations(contacts)
-            clear_contacts(contacts)
-            if len(contacts) > 1:
-                contacts.sort(key=by_distance)
+        prepare_contacts(contacts, name, file_date)
+        map_contacts_locations(contacts)
+        clear_contacts(contacts)
+        if len(contacts) > 1:
+            contacts.sort(key=by_distance)
 
-            if len(contacts) > 10:
-                contacts = contacts[:10]
-
-            if contacts:
-                response_dict['list_of_meetings'] = contacts
+        if len(contacts) > 10:
+            contacts = contacts[:10]
+        
+        if contacts:
+            response_dict['list_of_meetings'] = contacts
 
     return render(request, 'list_meetings.html', response_dict)
 
@@ -108,13 +112,11 @@ def get_localizations(name, file_date):
 
 def prepare_contacts(contacts, name, file_date):
     user_data = list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
-    if len(user_data) <= 0:
-        return False
     for data in user_data:
         timeline_objects = data['data']['timelineObjects']
         for timeline_object in timeline_objects:
             convert_timeline_obj(contacts, timeline_object)
-    return True
+
 
 def convert_timeline_obj(contacts, timeline_object):
     for contact in contacts:
@@ -143,6 +145,8 @@ def get_distance_place(contact, timeline_object):
     point2 = (second_long, second_lat)
 
     distance = geopy.distance.vincenty(point1, point2).km
+
+    contact['user_loc'] = dict(latitude=str(round(second_lat, 2)), longitude=str(round(second_long, 2)))
     return distance
 
 
@@ -163,6 +167,8 @@ def get_distance_activity(contact, timeline_object):
     distance2 = geopy.distance.vincenty(point2, point3).km
 
     if distance1 < distance2:
+        contact['user_loc'] = dict(latitude=str(round(first_lat, 2)), longitude=str(round(first_long, 2)))
         return distance1
     else:
+        contact['user_loc'] = dict(latitude=str(round(second_lat, 2)), longitude=str(round(second_long, 2)))
         return distance2

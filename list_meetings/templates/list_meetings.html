@@ -34,7 +34,7 @@
                 <td>{{meetings.distance}} km</td>
                 <td>{{meetings.startTimestamp}}</td>
                 <td>{{meetings.endTimestamp}}</td>
-                <td><a href="{% url 'visit' meetings.location.latitude meetings.location.longitude%}">
+                <td><a href="{% url 'activity' meetings.location.latitude meetings.location.longitude meetings.user_loc.latitude meetings.user_loc.longitude %}">
                     Check details and map
                 </a></td>
             </tr>
