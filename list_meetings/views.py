@@ -17,17 +17,17 @@ def list_meetings(request):
         year = request.POST.get("choose_year") 
         file_date = month + str(year)
         contacts = get_contacts(name, file_date)
-        prepare_contacts(contacts, name, file_date)
-        map_contacts_locations(contacts)
-        clear_contacts(contacts)
-        if len(contacts) > 1:
-            contacts.sort(key=by_distance)
+        if prepare_contacts(contacts, name, file_date):
+            map_contacts_locations(contacts)
+            clear_contacts(contacts)
+            if len(contacts) > 1:
+                contacts.sort(key=by_distance)
 
-        if len(contacts) > 10:
-            contacts = contacts[:10]
-        
-        if contacts:
-            response_dict['list_of_meetings'] = contacts
+            if len(contacts) > 10:
+                contacts = contacts[:10]
+
+            if contacts:
+                response_dict['list_of_meetings'] = contacts
 
     return render(request, 'list_meetings.html', response_dict)
 
@@ -108,11 +108,13 @@ def get_localizations(name, file_date):
 
 def prepare_contacts(contacts, name, file_date):
     user_data = list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
+    if len(user_data) <= 0:
+        return False
     for data in user_data:
         timeline_objects = data['data']['timelineObjects']
         for timeline_object in timeline_objects:
             convert_timeline_obj(contacts, timeline_object)
-
+    return True
 
 def convert_timeline_obj(contacts, timeline_object):
     for contact in contacts:
