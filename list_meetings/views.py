@@ -7,16 +7,24 @@ import json
 
 def list_meetings(request):
     name = request.user.username
-    contacts = get_contacts(name)
-    prepare_contacts(contacts, name)
-    contacts.sort(key=by_distance)
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    years = [2019, 2020]
+    response_dict = {'name': name, "months": months, "years": years}
 
-    if len(contacts) > 10:
-        contacts = contacts[:10]
+    if request.method == 'POST':
+        month = request.POST.get("choose_month") 
+        year = request.POST.get("choose_year") 
+        file_date = month + str(year)
+        contacts = get_contacts(name, file_date)
+        prepare_contacts(contacts, name, file_date)
+        contacts.sort(key=by_distance)
+
+        if len(contacts) > 10:
+            contacts = contacts[:10]
         
-    response_dict = {'name': name}
-    if contacts:
-        response_dict['list_of_meetings'] = contacts
+        if contacts:
+            response_dict['list_of_meetings'] = contacts
+
     return render(request, 'list_meetings.html', response_dict)
 
 
@@ -24,8 +32,8 @@ def by_distance(contact):
     return float(contact['distance'])
 
 
-def get_contacts(name):
-    localizations = get_localizations(name)
+def get_contacts(name, file_date):
+    localizations = get_localizations(name, file_date)
     contacts = list()
 
     for localization in localizations:
@@ -65,11 +73,9 @@ def add_place(timeline_object, contacts):
     contacts.append(place)
 
 
-def get_localizations(name):
-    localizations = list(LocalizationsData.objects
-                        .filter(pub_date__gte=(datetime.now() - timedelta(days=38)))
-                        .exclude(name=name).values())
-                        
+def get_localizations(name, file_date):
+    localizations = list(LocalizationsData.objects.filter(file_date=file_date).exclude(name=name).values())
+
     for localization in localizations:
         try:
             status = HealthStatus.objects.get(name=localization['name'])
@@ -83,9 +89,8 @@ def get_localizations(name):
     return localizations
 
 
-def prepare_contacts(contacts, name):
-    user_data = list(LocalizationsData.objects.filter(name=name)
-                    .filter(pub_date__gte=(datetime.now() - timedelta(days=38))).values())
+def prepare_contacts(contacts, name, file_date):
+    user_data = list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
     for data in user_data:
         timeline_objects = data['data']['timelineObjects']
         for timeline_object in timeline_objects:

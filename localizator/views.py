@@ -59,36 +59,35 @@ def upload(response):
 
 def status(response):
     name = response.user.username
-    if response.method == 'POST':
-        if response.POST.get("save"):
-            if response.POST.get("infected_present") == "clicked":
-                start_date = convert_date(response.POST.get("start_date"))
-                end_date = date.today()
-                status = True
+    if response.method == 'POST' and response.POST.get("save"):
+        if response.POST.get("infected_present") == "clicked":
+            start_date = convert_date(response.POST.get("start_date"))
+            end_date = date.today()
+            status = True
                 
-            elif response.POST.get("infected_past") == "clicked":
-                start_date = convert_date(response.POST.get("start_date"))
-                end_date = convert_date(response.POST.get("end_date"))
-                status = True
+        elif response.POST.get("infected_past") == "clicked":
+            start_date = convert_date(response.POST.get("start_date"))
+            end_date = convert_date(response.POST.get("end_date"))
+            status = True
 
-            else:
-                start_date = date.today()
-                end_date = date.today()
-                status = False
+        else:
+            start_date = date.today()
+            end_date = date.today()
+            status = False
 
-            t = HealthStatus(name=name, status=status, start_date=start_date, end_date=end_date)
-            if status == False:
-                HealthStatus.objects.filter(name=name).delete()
-                t.save()
-                return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
+        t = HealthStatus(name=name, status=status, start_date=start_date, end_date=end_date)
+        if status == False:
+            HealthStatus.objects.filter(name=name).delete()
+            t.save()
+            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
 
-            elif status == True and check_status_dates(start_date, end_date):
-                HealthStatus.objects.filter(name=name).delete()
-                t.save()
-                return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
+        elif status == True and check_status_dates(start_date, end_date):
+            HealthStatus.objects.filter(name=name).delete()
+            t.save()
+            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
 
-            else:
-                return render(response, 'localizator/status.html', {"name":name, "error_date_message":get_error_date()})
+        else:
+            return render(response, 'localizator/status.html', {"name":name, "error_date_message":get_error_date()})
     
     return render(response, 'localizator/status.html', {"name":name})
 
