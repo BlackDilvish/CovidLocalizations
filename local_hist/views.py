@@ -3,6 +3,7 @@ from localizator.models import LocalizationsData
 from django.http import HttpResponse
 from datetime import datetime
 
+
 def local_hist(response):
 	username = response.user.username
 	months = ["January", "February", "March", "April", "May", "June",

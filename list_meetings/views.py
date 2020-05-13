@@ -1,8 +1,9 @@
+from django.http import HttpResponse
+
 from localizator.models import LocalizationsData, HealthStatus
 from django.shortcuts import render
 from datetime import datetime, timedelta
 import geopy.distance
-import json
 
 
 def list_meetings(request):
@@ -17,7 +18,10 @@ def list_meetings(request):
         file_date = month + str(year)
         contacts = get_contacts(name, file_date)
         prepare_contacts(contacts, name, file_date)
-        contacts.sort(key=by_distance)
+        map_contacts_locations(contacts)
+        clear_contacts(contacts)
+        if len(contacts) > 1:
+            contacts.sort(key=by_distance)
 
         if len(contacts) > 10:
             contacts = contacts[:10]
@@ -30,6 +34,19 @@ def list_meetings(request):
 
 def by_distance(contact):
     return float(contact['distance'])
+
+
+def map_contacts_locations(contacts):
+    for contact in contacts:
+        latitude = str(round(float(contact['location']['latitudeE7'] / 1E7), 2))
+        longitude = str(round(float(contact['location']['longitudeE7'] / 1E7), 2))
+        contact['location'] = dict(latitude=latitude, longitude=longitude)
+
+
+def clear_contacts(contacts):
+    for contact in contacts:
+        if 'distance' not in contact:
+            contacts.remove(contact)
 
 
 def get_contacts(name, file_date):
@@ -101,7 +118,7 @@ def convert_timeline_obj(contacts, timeline_object):
     for contact in contacts:
         if 'activitySegment' in timeline_object:
             if 'startLocation' not in timeline_object['activitySegment'] or \
-                'endLocation' not in timeline_object['activitySegment']:     
+               'endLocation' not in timeline_object['activitySegment']:
                 contacts.remove(contact)
                 continue
             distance = get_distance_activity(contact, timeline_object['activitySegment'])
@@ -111,7 +128,7 @@ def convert_timeline_obj(contacts, timeline_object):
                 continue
             distance = get_distance_place(contact, timeline_object['placeVisit'])
 
-        contact['distance'] = round(float(distance), 2)   
+        contact['distance'] = round(float(distance), 2)
 
 
 def get_distance_place(contact, timeline_object):

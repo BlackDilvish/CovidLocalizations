@@ -41,9 +41,9 @@ table, th, td {
 			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude %}
 		{% endif %}
 		
-		<table>
+		<table class="">
 		{% for key, val in item.items %}
-			<tr> <th>{{key}}</th> <td>{{val}}</td> </tr> 
+			<tr class=""> <th>{{key}}</th> <td>{{val}}</td> </tr>
 		{% endfor %}
 		</table>
 		<br><br>

@@ -34,7 +34,9 @@
                 <td>{{meetings.distance}} km</td>
                 <td>{{meetings.startTimestamp}}</td>
                 <td>{{meetings.endTimestamp}}</td>
-                <td><a href="{{meetings.id}}">Check details and map</a></td>
+                <td><a href="{% url 'visit' meetings.location.latitude meetings.location.longitude%}">
+                    Check details and map
+                </a></td>
             </tr>
         {% endfor %}
         </table>
