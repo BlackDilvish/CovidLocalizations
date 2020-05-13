@@ -2,6 +2,7 @@
 
 {% block title %}Localization history{% endblock %}
 {% load crispy_forms_tags %}
+
 {% block head %}
 <style>
 table, th, td {
@@ -14,6 +15,7 @@ table, th, td {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 {% endblock %}
+
 {% block content %}
 <h1> Localization history </h1>
 {% if user.is_authenticated %}
@@ -34,10 +36,8 @@ table, th, td {
 	</form>
 	{% for item in output %}
 		{% if item|length == 7 %}
-			<!-- Visit place on <a href="/local_hist/visit/{{item.Places_latitude}}/{{item.Places_longitude}}">map</a> -->
 			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
 		{% else %}
-			<!-- Activity on <a href="/local_hist/activity/{{item.Start_latitude}}/{{item.Start_longitude}}/{{item.End_latitude}}/{{item.End_longitude}}">map</a> -->
 			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude %}
 		{% endif %}
 		
