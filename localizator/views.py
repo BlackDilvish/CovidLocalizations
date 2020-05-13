@@ -15,12 +15,14 @@ def index(response):
 
 def home(response):
     name = response.user.username
-    return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)}) 
+    return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name),
+                                                      "status_info":check_status(name)}) 
 
 
 def upload(response):
     name = response.user.username
-    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
     years = [2019, 2020]
 
     if response.method == 'POST':
@@ -51,7 +53,8 @@ def upload(response):
     else:
         form = FileForm()
 
-    return render(response, 'localizator/upload.html', {'form':form, "name":name, "months": months, "years": years})
+    return render(response, 'localizator/upload.html', {'form':form, "name":name,
+                                                        "months": months, "years": years})
 
 
 def status(response):
@@ -127,7 +130,7 @@ def convert_date(str_date):
         return datetime.strptime(str_date, '%Y-%m-%d').date()
         
 
-def validate_json(json_string):# thanks to: https://stackoverflow.com/questions/21334138/check-if-file-is-json-loadable
+def validate_json(json_string):
     try:
         text = json.load(json_string)
         return text

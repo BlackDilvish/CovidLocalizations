@@ -66,8 +66,10 @@ def add_place(timeline_object, contacts):
 
 
 def get_localizations(name):
-    localizations = list(LocalizationsData.objects.filter(pub_date__gte=(datetime.now() - timedelta(days=38))).
-                                                 exclude(name=name).values())
+    localizations = list(LocalizationsData.objects
+                        .filter(pub_date__gte=(datetime.now() - timedelta(days=38)))
+                        .exclude(name=name).values())
+                        
     for localization in localizations:
         try:
             status = HealthStatus.objects.get(name=localization['name'])
@@ -82,24 +84,29 @@ def get_localizations(name):
 
 
 def prepare_contacts(contacts, name):
-    user_data = list(LocalizationsData.objects.filter(name=name).filter(pub_date__gte=(datetime.now() - timedelta(days=38))).values())
+    user_data = list(LocalizationsData.objects.filter(name=name)
+                    .filter(pub_date__gte=(datetime.now() - timedelta(days=38))).values())
     for data in user_data:
         timeline_objects = data['data']['timelineObjects']
         for timeline_object in timeline_objects:
-            for contact in contacts:
-                if 'activitySegment' in timeline_object:
-                    if 'startLocation' not in timeline_object['activitySegment'] or 'endLocation' \
-                            not in timeline_object['activitySegment']:
-                        contacts.remove(contact)
-                        continue
-                    distance = get_distance_activity(contact, timeline_object['activitySegment'])
-                else:
-                    if 'location' not in timeline_object['placeVisit']:
-                        contacts.remove(contact)
-                        continue
-                    distance = get_distance_place(contact, timeline_object['placeVisit'])
+            convert_timeline_obj(contacts, timeline_object)
 
-                contact['distance'] = round(float(distance), 2)
+
+def convert_timeline_obj(contacts, timeline_object):
+    for contact in contacts:
+        if 'activitySegment' in timeline_object:
+            if 'startLocation' not in timeline_object['activitySegment'] or \
+                'endLocation' not in timeline_object['activitySegment']:     
+                contacts.remove(contact)
+                continue
+            distance = get_distance_activity(contact, timeline_object['activitySegment'])
+        else:
+            if 'location' not in timeline_object['placeVisit']:
+                contacts.remove(contact)
+                continue
+            distance = get_distance_place(contact, timeline_object['placeVisit'])
+
+        contact['distance'] = round(float(distance), 2)   
 
 
 def get_distance_place(contact, timeline_object):
