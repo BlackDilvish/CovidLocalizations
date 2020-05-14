@@ -1,0 +1,36 @@
+.side_bar {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #504DAB;
+    overflow: hidden;
+    padding-top: 20px;
+}
+
+.side_bar a {
+    padding: 6px, 6px, 6px, 10px;
+    text-decoration: darksalmon;
+    color: #FFFFFF;
+    font-size: 24px;
+    display: block;
+    text-align: center;
+}
+
+.side_bar a:hover {
+    color: #FFCD00;
+}
+
+.main{
+    margin-left: 160px;
+    padding: 10px;
+}   
+
+.footy{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
