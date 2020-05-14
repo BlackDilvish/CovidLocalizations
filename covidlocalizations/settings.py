@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'localizator.apps.LocalizatorConfig',
     'register.apps.RegisterConfig',
     'local_hist.apps.LocalHistConfig',
-    'list_meetings.apps.ListMeetingsConfig'
+    'list_meetings.apps.ListMeetingsConfig',
+    'heatmap.apps.HeatmapConfig',
 ]
 
 MIDDLEWARE = [
