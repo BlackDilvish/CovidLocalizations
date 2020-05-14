@@ -5,37 +5,11 @@
 {% block head %}
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-<style>
-    #map { width: 800px; height: 600px; }
-    body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
-    .ghbtns { position: relative; top: 4px; margin-left: 5px; }
-    a { color: #0077ff; }
-</style>
-{% endblock %}
-
-{% block content %}
-<div id="map"></div>
 
 {% load static %}
 <script src="{% static 'heatmap/leaflet-heat.js' %}"></script>
+{% endblock %}
 
-<script>
-    var addressPoints = [];
-    {% for loc in localizations %}
-        addressPoints.push([{{loc.0}}, {{loc.1}}]);
-    {% endfor %}
-</script>
-<script>
-
-var map = L.map('map').setView([50.336, 19.215], 15);
-
-var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
-
-addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
-
-var heat = L.heatLayer(addressPoints).addTo(map);
-
-</script>
+{% block content %}
+{% include "heatmap/template_heatmap.html" with mapid="map1" center=center localizations=localizations %}
 {% endblock %}

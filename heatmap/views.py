@@ -10,6 +10,9 @@ def index(response):
              [50.33629, 19.218649],
              [50.33229, 19.215649],
              [50.33829, 19.215649],
-             ]
+    ]
 
-    return render(response, 'heatmap/index.html', {'name': username, 'localizations': locs})
+    return render(response, 'heatmap/index.html', {'mapid': 1, 
+                                                'name': username, 
+                                                'center': [50.336, 19.215], 
+                                                'localizations': locs})
