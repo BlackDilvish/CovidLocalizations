@@ -56,39 +56,45 @@ def get_contacts(name, file_date):
 
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
+        status = HealthStatus.objects.get(name=localization['name'])
 
         for timeline_object in timeline_objects:
             if 'activitySegment' in timeline_object:
-                add_activity(timeline_object, contacts)
+                add_activity(timeline_object, contacts, status)
             else:
-                add_place(timeline_object, contacts)
+                add_place(timeline_object, contacts, status)
 
     return contacts
 
 
-def add_activity(timeline_object, contacts):
+def add_activity(timeline_object, contacts, status):
     timeline_data = timeline_object['activitySegment']
     start_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
     start_date_second = start_date_first + timedelta(minutes=5)
     end_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
     end_date_second = end_date_first + timedelta(minutes=5)
 
-    first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
+    if status.start_date < end_date_first.date() and status.start_date < end_date_second.date() and \
+        status.end_date > start_date_first.date() and status.end_date > start_date_second.date():
+
+        first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
                        endTimestamp=end_date_first)
-    second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
-                        endTimestamp=end_date_second)
-                        
-    contacts.append(first_place)
-    contacts.append(second_place)
+        second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
+                        endTimestamp=end_date_second)     
+
+        contacts.append(first_place)
+        contacts.append(second_place)
 
 
-def add_place(timeline_object, contacts):
+def add_place(timeline_object, contacts, status):
     timeline_data = timeline_object['placeVisit']
     start_time = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
     end_time = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
-    place = dict(location=timeline_data['location'], startTimestamp=start_time,
-                 endTimestamp=end_time)
-    contacts.append(place)
+
+    if status.start_date < end_time.date() and status.end_date > start_time.date():
+        place = dict(location=timeline_data['location'], startTimestamp=start_time,
+                    endTimestamp=end_time)
+        contacts.append(place)
 
 
 def get_localizations(name, file_date):
@@ -103,6 +109,7 @@ def get_localizations(name, file_date):
 
         if status.status is False:
             localizations.remove(localization)
+        
 
     return localizations
 
@@ -132,7 +139,10 @@ def convert_timeline_obj(contacts, timeline_object):
                 continue
             distance = get_distance_place(contact, timeline_object['placeVisit'])
 
-        contact['distance'] = round(float(distance), 2)
+        if 'distance' in contact:
+            contact['distance'] = min(round(float(distance), 3), contact['distance'])
+        else:
+            contact['distance'] = round(float(distance), 3)
 
 
 def get_distance_place(contact, timeline_object):
