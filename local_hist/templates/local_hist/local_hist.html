@@ -8,6 +8,10 @@
 table, th, td {
   border: 1px solid black;
 }
+.map_table {
+	display: inline-block;
+	margin-right: 50px;
+}
 </style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,20 +37,26 @@ table, th, td {
 	</select>
 	{{form.as_p}}
 	<p><p></p><button type="submit" class="btn btn-success">Show</button></p></p>
-	</form>
+	</form>	
 	{% for item in output %}
-		{% if item|length == 7 %}
-			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
-		{% else %}
-			{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude %}
-		{% endif %}
-		
-		<table class="">
-		{% for key, val in item.items %}
-			<tr class=""> <th>{{key}}</th> <td>{{val}}</td> </tr>
-		{% endfor %}
-		</table>
-		<br><br>
+		<div class="map_table">
+			{% if item|length == 7 %}
+				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
+			{% else %}
+				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude %}
+			{% endif %}
+		</div>
+		<div class="map_table">
+			<table style="max-width:400px">
+			{% for key, val in item.items %}
+				<tr class=""> 
+					<th>{{key}}</th> 
+					<td>{{val}}</td> 
+				</tr>
+			{% endfor %}
+			</table>
+			<br><br>
+		</div>
 	{% endfor %}
 	<br>
 {% else %}
