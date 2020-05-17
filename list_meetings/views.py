@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import geopy.distance
 
 divider = 1E7
+precision = 3
 
 def list_meetings(request):
     name = request.user.username
@@ -34,8 +35,8 @@ def by_distance(contact):
 
 def map_contacts_locations(contacts):
     for contact in contacts:
-        latitude = str(round(float(contact['location']['latitudeE7'] / divider), 2))
-        longitude = str(round(float(contact['location']['longitudeE7'] / divider), 2))
+        latitude = str(round(float(contact['location']['latitudeE7'] / divider), precision))
+        longitude = str(round(float(contact['location']['longitudeE7'] / divider), precision))
         contact['location'] = dict(latitude=latitude, longitude=longitude)
 
 
@@ -141,10 +142,10 @@ def set_distance_place(contact, timeline_object):
     point2 = (second_long, second_lat)
 
     distance = geopy.distance.vincenty(point1, point2).km
-    coordinates = dict(latitude=str(round(second_lat, 2)), longitude=str(round(second_long, 2)))
+    coordinates = dict(latitude=str(round(second_lat, precision)), longitude=str(round(second_long, precision)))
 
     if 'distance' not in contact or distance < contact['distance']:
-        contact['distance'] = round(float(distance), 3)
+        contact['distance'] = round(float(distance), precision)
         contact['user_loc'] = coordinates
 
 
@@ -166,11 +167,11 @@ def set_distance_activity(contact, timeline_object):
 
     if distance1 < distance2:
         distance = distance1
-        coordinates = dict(latitude=str(round(first_lat, 2)), longitude=str(round(first_long, 2)))
+        coordinates = dict(latitude=str(round(first_lat, precision)), longitude=str(round(first_long, precision)))
     else:
         distance = distance2
-        coordinates = dict(latitude=str(round(second_lat, 2)), longitude=str(round(second_long, 2)))
+        coordinates = dict(latitude=str(round(second_lat, precision)), longitude=str(round(second_long, precision)))
 
     if 'distance' not in contact or distance < contact['distance']:
-        contact['distance'] = round(float(distance), 3)
+        contact['distance'] = round(float(distance), precision)
         contact['user_loc'] = coordinates

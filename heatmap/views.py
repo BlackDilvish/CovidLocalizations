@@ -2,6 +2,7 @@ from django.shortcuts import render
 from list_meetings.views import get_contacts
 
 divider = 1E7
+precision = 7
 
 def heatmap(response):
     username = response.user.username
@@ -18,12 +19,13 @@ def heatmap(response):
                                                         'localizations': coordinates})
     return render(response, 'heatmap/heatmap.html', {'name': username})
 
+
 def get_coordinates(contacts):
     coordinates = []
 
     for contact in contacts:
-        latitude = round(float(contact['location']['latitudeE7'] / divider), 3)
-        longitude = round(float(contact['location']['longitudeE7'] / divider), 3)
+        latitude = round(float(contact['location']['latitudeE7'] / divider), precision)
+        longitude = round(float(contact['location']['longitudeE7'] / divider), precision)
         coordinates.append([latitude, longitude])
 
     return coordinates
