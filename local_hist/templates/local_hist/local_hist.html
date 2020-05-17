@@ -23,21 +23,7 @@ table, th, td {
 {% block content %}
 <h1> Localization history </h1>
 {% if user.is_authenticated %}
-	<form method="post" action="{% url "local_hist" %}" enctype="multipart/form-data">
-	{% csrf_token %}
-	<select name="choose_month">
-		{% for month in months %}
-			<option value={{month}}>{{month}}</option>
-		{% endfor %}
-	</select>
-	<select name="choose_year">
-		{% for year in years %}
-			<option value={{year}}>{{year}}</option>
-		{% endfor %}
-	</select>
-	{{form.as_p}}
-	<p><p></p><button type="submit" class="btn btn-success">Show</button></p></p>
-	</form>	
+	{% include "localizator/template_select.html" with action="local_hist" button_name="Show" %}
 	{% for item in output %}
 		<div class="map_table">
 			{% if item|length == 7 %}

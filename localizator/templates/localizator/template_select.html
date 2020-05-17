@@ -1,0 +1,26 @@
+<form method="post" action="{% url action %}" enctype="multipart/form-data">
+    {% csrf_token %}
+        <select class="custom-select" name="choose_month">
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select>
+        <p></p>
+        <select class="custom-select" name="choose_year">
+            <option value=2019>2019</option>
+            <option value=2020>2020</option>
+        </select>
+        <p></p>
+        {{form.as_p}}
+        <button type="submit" class="btn btn-success">{{button_name}}</button>
+        <p></p>
+</form>

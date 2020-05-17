@@ -6,9 +6,6 @@ from datetime import datetime
 
 def local_hist(response):
 	username = response.user.username
-	months = ["January", "February", "March", "April", "May", "June",
-			"July", "August", "September", "October", "November", "December"]
-	years = [2019, 2020]
 	file_date = ""
 
 	if response.method == "POST":
@@ -17,12 +14,11 @@ def local_hist(response):
 		file_date = month + str(year)
 
 	hist = LocalizationsData.objects.filter(name=username, file_date=file_date)
+
 	if len(hist):
 		out = history(hist)
-		return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out),
-																"months": months, "years": years})
-	return render(response, 'local_hist/local_hist.html', {'name': username, "months": months,
-															"years": years})
+		return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out)})
+	return render(response, 'local_hist/local_hist.html', {'name': username})
 
 
 def visit(response, lat, lon):
@@ -40,6 +36,7 @@ def activity(response, lat1, lon1, lat2, lon2):
 
 def history(hist):
 	output = []
+	
 	for item in hist:
 		for i in range(len(item.data["timelineObjects"])):
 			if "activitySegment" in item.data["timelineObjects"][i]:
