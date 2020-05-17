@@ -1,0 +1,22 @@
+{% extends "localizator/leaflet_map.html" %}
+
+{% block title %} Fancy heatmap {% endblock %}
+
+{% block head2 %}
+{% load static %}
+<script src="{% static 'heatmap/leaflet-heat.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h1> Heatmap </h1>
+    {% if user.is_authenticated %}
+        {% include "localizator/template_select.html" with action="heatmap" button_name="Show" %}
+        {% if localizations %}
+            {% include "heatmap/template_heatmap.html" with mapid="map1" center=center localizations=localizations %}
+        {% else %}
+            <h3>There is nothing to display</h3>
+        {% endif %}
+    {% else %}
+        <p>You need to <a href="/login">log in</a> to see your heatmap</p>
+    {% endif %}
+{% endblock %}

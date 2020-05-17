@@ -1,18 +1,29 @@
 from django.shortcuts import render
+from list_meetings.views import get_contacts
 
-def index(response):
+divider = 1E7
+
+def heatmap(response):
     username = response.user.username
-    locs = [ [50.33623, 19.215649],
-             [50.33629, 19.215689],
-             [50.33689, 19.225649],
-             [50.33629, 19.215849],
-             [50.33689, 19.215649],
-             [50.33629, 19.218649],
-             [50.33229, 19.215649],
-             [50.33829, 19.215649],
-    ]
+    if response.method == 'POST':
+        month = response.POST.get("choose_month") 
+        year = response.POST.get("choose_year") 
+        file_date = month + str(year)
+        contacts = get_contacts(username, file_date)
+        coordinates = get_coordinates(contacts)
+        if len(coordinates):
+            return render(response, 'heatmap/heatmap.html', {'mapid': 1, 
+                                                        'name': username, 
+                                                        'center': [50.067, 19.910], 
+                                                        'localizations': coordinates})
+    return render(response, 'heatmap/heatmap.html', {'name': username})
 
-    return render(response, 'heatmap/index.html', {'mapid': 1, 
-                                                'name': username, 
-                                                'center': [50.336, 19.215], 
-                                                'localizations': locs})
+def get_coordinates(contacts):
+    coordinates = []
+
+    for contact in contacts:
+        latitude = round(float(contact['location']['latitudeE7'] / divider), 3)
+        longitude = round(float(contact['location']['longitudeE7'] / divider), 3)
+        coordinates.append([latitude, longitude])
+
+    return coordinates
