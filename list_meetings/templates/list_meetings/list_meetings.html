@@ -1,5 +1,7 @@
 {% extends "localizator/base.html" %}
 
+{% block title %} List of meetings {% endblock %}
+
 {%block content%}
 <h1>Possible contacts with diagnosed people</h1>
 {% if user.is_authenticated %}
@@ -19,7 +21,7 @@
                 <td>{{meetings.distance}} km</td>
                 <td>{{meetings.startTimestamp}}</td>
                 <td>{{meetings.endTimestamp}}</td>
-                <td><a href="{% url 'activity' meetings.location.latitude meetings.location.longitude meetings.user_loc.latitude meetings.user_loc.longitude %}">
+                <td><a href="{% url 'contact' meetings.location.latitude meetings.location.longitude meetings.user_loc.latitude meetings.user_loc.longitude %}">
                     Check details and map
                 </a></td>
             </tr>

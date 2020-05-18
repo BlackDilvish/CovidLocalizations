@@ -26,7 +26,13 @@ def list_meetings(request):
             if contacts:
                 response_dict['list_of_meetings'] = contacts
 
-    return render(request, 'list_meetings.html', response_dict)
+    return render(request, 'list_meetings/list_meetings.html', response_dict)
+
+def contact(request, lat1, lon1, lat2, lon2):
+	username = request.user.username
+	return render(request, 'list_meetings/contact.html', {'mapid': "mapid", 'lat1': lat1,
+                                                        'lon1': lon1, 'lat2': lat2,
+                                                        'lon2': lon2, 'name': username})
 
 
 def by_distance(contact):

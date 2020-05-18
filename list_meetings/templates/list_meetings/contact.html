@@ -1,0 +1,8 @@
+{% extends "localizator/leaflet_map.html" %}
+
+{% block title %} Contact info {% endblock %}
+
+{% block content %}
+	{% include "list_meetings/contact_map.html" with mapid="1" lat1=lat1 lon1=lon1 lat2=lat2 lon2=lon2 %}
+	<a href="javascript:history.back()">Go Back</a>
+{% endblock %}
