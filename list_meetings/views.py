@@ -116,6 +116,7 @@ def prepare_contacts(contacts, name, file_date):
             convert_timeline_obj(contacts, timeline_object)
     return True
 
+
 def convert_timeline_obj(contacts, timeline_object):
     for contact in contacts:
         if 'activitySegment' in timeline_object:
