@@ -1,17 +1,16 @@
 from django.http import HttpResponse
-
 from localizator.models import LocalizationsData, HealthStatus
 from django.shortcuts import render
 from datetime import datetime, timedelta
 import geopy.distance
 
+divider = 1E7
+precision = 3
 
 def list_meetings(request):
     name = request.user.username
-    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    years = [2019, 2020]
-    response_dict = {'name': name, "months": months, "years": years}
-
+    response_dict = {'name': name}
+    
     if request.method == 'POST':
         month = request.POST.get("choose_month") 
         year = request.POST.get("choose_year") 
@@ -22,14 +21,18 @@ def list_meetings(request):
             clear_contacts(contacts)
             if len(contacts) > 1:
                 contacts.sort(key=by_distance)
-
             if len(contacts) > 10:
                 contacts = contacts[:10]
-
             if contacts:
                 response_dict['list_of_meetings'] = contacts
 
-    return render(request, 'list_meetings.html', response_dict)
+    return render(request, 'list_meetings/list_meetings.html', response_dict)
+
+def contact(request, lat1, lon1, lat2, lon2):
+	username = request.user.username
+	return render(request, 'list_meetings/contact.html', {'mapid': "mapid", 'lat1': lat1,
+                                                        'lon1': lon1, 'lat2': lat2,
+                                                        'lon2': lon2, 'name': username})
 
 
 def by_distance(contact):
@@ -38,8 +41,8 @@ def by_distance(contact):
 
 def map_contacts_locations(contacts):
     for contact in contacts:
-        latitude = str(round(float(contact['location']['latitudeE7'] / 1E7), 2))
-        longitude = str(round(float(contact['location']['longitudeE7'] / 1E7), 2))
+        latitude = str(round(float(contact['location']['latitudeE7'] / divider), precision))
+        longitude = str(round(float(contact['location']['longitudeE7'] / divider), precision))
         contact['location'] = dict(latitude=latitude, longitude=longitude)
 
 
@@ -55,39 +58,42 @@ def get_contacts(name, file_date):
 
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
-
+        status = HealthStatus.objects.get(name=localization['name'])
         for timeline_object in timeline_objects:
             if 'activitySegment' in timeline_object:
-                add_activity(timeline_object, contacts)
+                add_activity(timeline_object, contacts, status)
             else:
-                add_place(timeline_object, contacts)
+                add_place(timeline_object, contacts, status)
 
     return contacts
 
 
-def add_activity(timeline_object, contacts):
+def add_activity(timeline_object, contacts, status):
     timeline_data = timeline_object['activitySegment']
     start_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
     start_date_second = start_date_first + timedelta(minutes=5)
     end_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
     end_date_second = end_date_first + timedelta(minutes=5)
+    if status.start_date < end_date_first.date() and status.start_date < end_date_second.date() and \
+        status.end_date > start_date_first.date() and status.end_date > start_date_second.date():
 
-    first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
+        first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
                        endTimestamp=end_date_first)
-    second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
-                        endTimestamp=end_date_second)
-                        
-    contacts.append(first_place)
-    contacts.append(second_place)
+        second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
+                        endTimestamp=end_date_second)     
+        contacts.append(first_place)
+        contacts.append(second_place)
 
 
-def add_place(timeline_object, contacts):
+def add_place(timeline_object, contacts, status):
     timeline_data = timeline_object['placeVisit']
     start_time = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
     end_time = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
-    place = dict(location=timeline_data['location'], startTimestamp=start_time,
-                 endTimestamp=end_time)
-    contacts.append(place)
+
+    if status.start_date < end_time.date() and status.end_date > start_time.date():
+        place = dict(location=timeline_data['location'], startTimestamp=start_time,
+                    endTimestamp=end_time)
+        contacts.append(place)
 
 
 def get_localizations(name, file_date):
@@ -99,15 +105,15 @@ def get_localizations(name, file_date):
         except HealthStatus.DoesNotExist:
             localizations.remove(localization)
             continue
-
         if status.status is False:
             localizations.remove(localization)
-
+        
     return localizations
 
 
 def prepare_contacts(contacts, name, file_date):
     user_data = list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
+
     if len(user_data) <= 0:
         return False
     for data in user_data:
@@ -124,37 +130,39 @@ def convert_timeline_obj(contacts, timeline_object):
                'endLocation' not in timeline_object['activitySegment']:
                 contacts.remove(contact)
                 continue
-            distance = get_distance_activity(contact, timeline_object['activitySegment'])
+            set_distance_activity(contact, timeline_object['activitySegment'])
         else:
             if 'location' not in timeline_object['placeVisit']:
                 contacts.remove(contact)
                 continue
-            distance = get_distance_place(contact, timeline_object['placeVisit'])
-
-        contact['distance'] = round(float(distance), 2)
+            set_distance_place(contact, timeline_object['placeVisit'])
 
 
-def get_distance_place(contact, timeline_object):
-    first_long = int(contact['location']['longitudeE7']) / 1E7
-    first_lat = int(contact['location']['latitudeE7']) / 1E7
-    second_long = int(timeline_object['location']['longitudeE7']) / 1E7
-    second_lat = int(timeline_object['location']['latitudeE7']) / 1E7
+def set_distance_place(contact, timeline_object):
+    first_long = int(contact['location']['longitudeE7']) / divider
+    first_lat = int(contact['location']['latitudeE7']) / divider
+    second_long = int(timeline_object['location']['longitudeE7']) / divider
+    second_lat = int(timeline_object['location']['latitudeE7']) / divider
 
     point1 = (first_long, first_lat)
     point2 = (second_long, second_lat)
 
     distance = geopy.distance.vincenty(point1, point2).km
-    return distance
+    coordinates = dict(latitude=str(round(second_lat, precision)), longitude=str(round(second_long, precision)))
+
+    if 'distance' not in contact or distance < contact['distance']:
+        contact['distance'] = round(float(distance), precision)
+        contact['user_loc'] = coordinates
 
 
-def get_distance_activity(contact, timeline_object):
-    first_long = int(timeline_object['startLocation']['longitudeE7']) / 1E7
-    first_lat = int(timeline_object['startLocation']['latitudeE7']) / 1E7
-    second_long = int(timeline_object['endLocation']['longitudeE7']) / 1E7
-    second_lat = int(timeline_object['endLocation']['latitudeE7']) / 1E7
+def set_distance_activity(contact, timeline_object):
+    first_long = int(timeline_object['startLocation']['longitudeE7']) / divider
+    first_lat = int(timeline_object['startLocation']['latitudeE7']) / divider
+    second_long = int(timeline_object['endLocation']['longitudeE7']) / divider
+    second_lat = int(timeline_object['endLocation']['latitudeE7']) / divider
 
-    third_long = int(contact['location']['longitudeE7']) / 1E7
-    third_lat = int(contact['location']['latitudeE7']) / 1E7
+    third_long = int(contact['location']['longitudeE7']) / divider
+    third_lat = int(contact['location']['latitudeE7']) / divider
 
     point1 = (first_long, first_lat)
     point2 = (second_long, second_lat)
@@ -164,6 +172,12 @@ def get_distance_activity(contact, timeline_object):
     distance2 = geopy.distance.vincenty(point2, point3).km
 
     if distance1 < distance2:
-        return distance1
+        distance = distance1
+        coordinates = dict(latitude=str(round(first_lat, precision)), longitude=str(round(first_long, precision)))
     else:
-        return distance2
+        distance = distance2
+        coordinates = dict(latitude=str(round(second_lat, precision)), longitude=str(round(second_long, precision)))
+
+    if 'distance' not in contact or distance < contact['distance']:
+        contact['distance'] = round(float(distance), precision)
+        contact['user_loc'] = coordinates

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'localizator.apps.LocalizatorConfig',
     'register.apps.RegisterConfig',
     'local_hist.apps.LocalHistConfig',
-    'list_meetings.apps.ListMeetingsConfig'
+    'list_meetings.apps.ListMeetingsConfig',
+    'heatmap.apps.HeatmapConfig',
 ]
 
 MIDDLEWARE = [
@@ -134,7 +135,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+	os.path.join(BASE_DIR, 'covidlocalizations/static'),
 )
 
 CRISPY_TEMPLATE_PACK="bootstrap4"

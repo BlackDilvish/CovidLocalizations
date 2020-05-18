@@ -6,9 +6,6 @@ from datetime import datetime
 
 def local_hist(response):
 	username = response.user.username
-	months = ["January", "February", "March", "April", "May", "June",
-			"July", "August", "September", "October", "November", "December"]
-	years = [2019, 2020]
 	file_date = ""
 
 	if response.method == "POST":
@@ -17,12 +14,11 @@ def local_hist(response):
 		file_date = month + str(year)
 
 	hist = LocalizationsData.objects.filter(name=username, file_date=file_date)
+
 	if len(hist):
 		out = history(hist)
-		return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out),
-																"months": months, "years": years})
-	return render(response, 'local_hist/local_hist.html', {'name': username, "months": months,
-															"years": years})
+		return render(response, 'local_hist/local_hist.html', {'name': username, 'output': convert(out)})
+	return render(response, 'local_hist/local_hist.html', {'name': username})
 
 
 def visit(response, lat, lon):
@@ -40,6 +36,7 @@ def activity(response, lat1, lon1, lat2, lon2):
 
 def history(hist):
 	output = []
+	
 	for item in hist:
 		for i in range(len(item.data["timelineObjects"])):
 			if "activitySegment" in item.data["timelineObjects"][i]:
@@ -60,72 +57,62 @@ def convert(output):
 
 		
 def item_activity(item, i):
-	act = {}			
-	if "duration" in item.data["timelineObjects"][i]["activitySegment"] and \
-	   	"startTimestampMs" in item.data["timelineObjects"][i]["activitySegment"]["duration"]:
-		act["Start_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["startTimestampMs"]
+	act = {}	
+	data = item.data["timelineObjects"][i]["activitySegment"]	
 
-	if "duration" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"endTimestampMs" in item.data["timelineObjects"][i]["activitySegment"]["duration"]:  
-		act["End_time"] = item.data["timelineObjects"][i]["activitySegment"]["duration"]["endTimestampMs"]
+	if "duration" in data and "startTimestampMs" in data["duration"]:
+		act["Start_time"] = data["duration"]["startTimestampMs"]
+
+	if "duration" in data and "endTimestampMs" in data["duration"]:  
+		act["End_time"] = data["duration"]["endTimestampMs"]
 		
-	if "startLocation" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"latitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["startLocation"]: 
-		act["Start_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["latitudeE7"]
+	if "startLocation" in data and "latitudeE7" in data["startLocation"]: 
+		act["Start_latitude"] = data["startLocation"]["latitudeE7"]
 	
-	if "startLocation" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"longitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["startLocation"]: 
-		act["Start_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["startLocation"]["longitudeE7"]
+	if "startLocation" in data and "longitudeE7" in data["startLocation"]: 
+		act["Start_longitude"] = data["startLocation"]["longitudeE7"]
 	
-	if "endLocation" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"latitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["endLocation"]: 
-		act["End_latitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["latitudeE7"]
+	if "endLocation" in data and "latitudeE7" in data["endLocation"]: 
+		act["End_latitude"] = data["endLocation"]["latitudeE7"]
 	
-	if "endLocation" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"longitudeE7" in item.data["timelineObjects"][i]["activitySegment"]["endLocation"]: 
-		act["End_longitude"] = item.data["timelineObjects"][i]["activitySegment"]["endLocation"]["longitudeE7"]
+	if "endLocation" in data and "longitudeE7" in data["endLocation"]: 
+		act["End_longitude"] = data["endLocation"]["longitudeE7"]
 	
-	if "distance" in item.data["timelineObjects"][i]["activitySegment"]:
-		act["Distance"] = str(item.data["timelineObjects"][i]["activitySegment"]["distance"])
+	if "distance" in data:
+		act["Distance"] = str(data["distance"])
 
-	if "activityType" in item.data["timelineObjects"][i]["activitySegment"]:
-		act["Activity_type"] = item.data["timelineObjects"][i]["activitySegment"]["activityType"]
+	if "activityType" in data:
+		act["Activity_type"] = data["activityType"]
 	
-	if "activities" in item.data["timelineObjects"][i]["activitySegment"] and \
-		"probability" in item.data["timelineObjects"][i]["activitySegment"]["activities"][0]:
-		act["Probability"] = item.data["timelineObjects"][i]["activitySegment"]["activities"][0]["probability"]
+	if "activities" in data and "probability" in data["activities"][0]:
+		act["Probability"] = data["activities"][0]["probability"]
 
 	return act
 
 
 def item_visit(item, i):
 	vis = {}
-				
-	if "duration" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"startTimestampMs" in item.data["timelineObjects"][i]["placeVisit"]["duration"]:
-		vis["Start_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["startTimestampMs"]
+	data = item.data["timelineObjects"][i]["placeVisit"]
+
+	if "duration" in data and "startTimestampMs" in data["duration"]:
+		vis["Start_time"] = data["duration"]["startTimestampMs"]
 	
-	if "duration" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"endTimestampMs" in item.data["timelineObjects"][i]["placeVisit"]["duration"]:
-		vis["End_time"] = item.data["timelineObjects"][i]["placeVisit"]["duration"]["endTimestampMs"]
+	if "duration" in data and "endTimestampMs" in data["duration"]:
+		vis["End_time"] = data["duration"]["endTimestampMs"]
 	
-	if "location" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"latitudeE7" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
-		vis["Places_latitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["latitudeE7"]
+	if "location" in data and "latitudeE7" in data["location"]:
+		vis["Places_latitude"] = data["location"]["latitudeE7"]
 	
-	if "location" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"longitudeE7" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
-		vis["Places_longitude"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["longitudeE7"]
+	if "location" in data and "longitudeE7" in data["location"]:
+		vis["Places_longitude"] = data["location"]["longitudeE7"]
 	
-	if "location" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"address" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
-		vis["Address"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["address"]
+	if "location" in data and "address" in data["location"]:
+		vis["Address"] = data["location"]["address"]
 	
-	if "location" in item.data["timelineObjects"][i]["placeVisit"] and \
-		"locationConfidence" in item.data["timelineObjects"][i]["placeVisit"]["location"]:
-		vis["Location_confidence"] = item.data["timelineObjects"][i]["placeVisit"]["location"]["locationConfidence"]
-	
-	if "visitConfidence" in item.data["timelineObjects"][i]["placeVisit"]:
-		vis["Visit_confidence"] = float(item.data["timelineObjects"][i]["placeVisit"]["visitConfidence"]) 
+	if "location" in data and "locationConfidence" in data["location"]:
+		vis["Location_confidence"] = data["location"]["locationConfidence"]
+
+	if "visitConfidence" in data:
+		vis["Visit_confidence"] = float(data["visitConfidence"]) 
 
 	return vis

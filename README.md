@@ -26,9 +26,8 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 - Google Takeout for localization data (https://takeout.google.com)
 
 ## Advanced project description:
-
-Product backlog on Trello: https://trello.com/b/25mkJJVa/covid-localizations
-Url: https://covidlocalizations.herokuapp.com
+- Product backlog on Trello: https://trello.com/b/25mkJJVa/covid-localizations
+- Url: https://covidlocalizations.herokuapp.com
 
 ### Week 1 (27.04-03.05):
 - Basic web page
@@ -49,11 +48,12 @@ Url: https://covidlocalizations.herokuapp.com
 
 ### Week 4 (18.05-24.05):
 - Sending notifications about possible meeting with infected person
-- Adding daily tips (at the top of the page)
+- Heatmap of user's localizations
 
 ### Week 5 (25.05-31.05):
 - Calculating position of the nearest infected person
 - Calculating possibility of being infected based on the vehicle you were using and how much time you spent with infected person - information displayed as part of board of close contacts
+- Displaying infected places on a heatmap
 
 ### Week 6  (01.06-07.06):
 - Advanced web page (design)
