@@ -7,6 +7,7 @@ import geopy.distance
 divider = 1E7
 precision = 3
 
+
 def list_meetings(request):
     name = request.user.username
     response_dict = {'name': name}
@@ -28,11 +29,12 @@ def list_meetings(request):
 
     return render(request, 'list_meetings/list_meetings.html', response_dict)
 
+
 def contact(request, lat1, lon1, lat2, lon2):
-	username = request.user.username
-	return render(request, 'list_meetings/contact.html', {'mapid': "mapid", 'lat1': lat1,
-                                                        'lon1': lon1, 'lat2': lat2,
-                                                        'lon2': lon2, 'name': username})
+    username = request.user.username
+    return render(request, 'list_meetings/contact.html', {'mapid': "mapid", 'lat1': lat1,
+                                                          'lon1': lon1, 'lat2': lat2,
+                                                          'lon2': lon2, 'name': username})
 
 
 def by_distance(contact):
