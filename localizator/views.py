@@ -4,7 +4,10 @@ from .models import LocalizationsData, HealthStatus
 from .forms import FileForm
 from datetime import date
 from datetime import datetime
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
 import json
+import list_meetings.views as list_meetings
 
 
 def index(response):
@@ -32,9 +35,12 @@ def upload(response):
                 month = response.POST.get("choose_month") 
                 year = response.POST.get("choose_year") 
                 file_date = month + str(year)
+                user = User.objects.get(username=name)
                 LocalizationsData.objects.filter(name=name, file_date=file_date).delete()
                 data = LocalizationsData(name=name, data=text, file_date=file_date)
                 data.save()
+                print(user.email)
+                check_if_met_sick_person(text, file_date, name, user.email)
                 return render(response, 'localizator/uploaded.html', {"name":name})
             else:
                 return render(response, 'localizator/upload.html', {'form': FileForm(), "name":name,
@@ -43,6 +49,40 @@ def upload(response):
         form = FileForm()
 
     return render(response, 'localizator/upload.html', {'form':form, "name":name})
+
+
+def check_if_met_sick_person(json_data, file_date, name, email):
+    contacts = list_meetings.get_contacts(name, file_date)
+    prepare_contacts(contacts, json_data)
+    contacts.sort(key=list_meetings.by_distance)
+    contacts = contacts[:10]
+    if len(contacts):
+        execute_mail(contacts, email)
+
+
+def prepare_contacts(contacts, json_data):
+    timeline_objects = json_data['timelineObjects']
+    for timeline_object in timeline_objects:
+        list_meetings.convert_timeline_obj(contacts, timeline_object)
+
+    for contact in contacts:
+        if 'distance' not in contact or contact['distance'] >= 0.25:
+            contacts.remove(contact)
+
+
+def execute_mail(contacts, email):
+    result_str = str('')
+    for i, contact in enumerate(contacts):
+        result_str += f'{i}. {contact["distance"]} in latitude: {contact["location"]["latitudeE7"]} ' \
+                     f'and longitude: {contact["location"]["longitudeE7"]}.\n'
+
+    send_mail(
+        '[COVID LOCALIZATIONS] Important! Possible contact with infected person occured.',
+        'There is a chance that you had close contacts (smaller than 250m) in following places: \n' + result_str,
+        'covid-localizations@no-reply.com',
+        [email],
+        fail_silently=False,
+    )
 
 
 def status(response):

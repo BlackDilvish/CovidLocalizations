@@ -143,3 +143,19 @@ CRISPY_TEMPLATE_PACK="bootstrap4"
 LOGIN_REDIRECT_URL = '/home'
 
 LOGOUT_REDIRECT_URL = '/register/loggedout'
+
+#niestety trzeba chyba podac prawdziwe dane do Waszego maila i w dodatku skonfigurowac w gmailu opcje less-secure
+#apps, ale to i tak nie zadziala jezeli macie chyba 2 stopniowa autoryzacje, jak chcecie tylko zobaczyc co wysyla sie
+#w mailu to uzyjcie backendu konsolowego opisanego pozniej
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'tutaj_Wasz_testowy@gmail.com'
+EMAIL_HOST_PASSWORD = 'tutaj_Wasze_haslo_chyba_trzeba_dac_moze_przez_zmienna srodowskowa np. i tak to pewnie trzeba' \
+                      'zrobic bardziej elegancko xd'
+EMAIL_HOST = 'smtp.gmail.com' #zeby wysylac z gmaila
+EMAIL_PORT = 587 #to nie wm czemu xd
+EMAIL_USE_TLS = True #to nie wm czemu
+
+#jak cos to trzeba zakomentowac to powyzej i uzyc tego, wowczas mail zostanie "przeslany" do konsoli i wyswietlony tam,
+# jezeli nie chcecie
+#sie gmailem bawic, ale jak cos to wyglada na to ze mozna to skonfigurowac zeby dzialalo
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
