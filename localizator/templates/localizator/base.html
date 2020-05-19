@@ -1,6 +1,13 @@
 <!doctype html>
 <html>
     <head>
+        <style>
+        	div.side_bar > a{
+        		font-size: 20px;
+        		text-align: left;
+        		margin-left: 10px;
+        	}
+        </style>
         <title>{% block title %} Base page {% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <meta charset="utf-8">
@@ -15,15 +22,22 @@
 
         <div class="side_bar">
             <a href="/home">Home</a>
+            <hr style="border:0;">
             <a href="/instruction">Instructions</a>
+            <hr style="border:0;">
             <a href="/upload">Upload</a>
+            <hr style="border:0;">
             <a href="/status">Status</a>
-            <a href="/local_hist"><font size="5">Localization history</font></a>
-            <a href="/list-meetings">Possible contacts with diagnosed people</a>
+            <hr style="border:0;">
+            <a href="/local_hist">Localization history</a>
+            <hr style="border:0;">
+            <a href="/list-meetings">Contacts with infected</a>
+            <hr style="border:0;">
             <a href="/heatmap">Heatmap</a>
+            <hr style="border:0;">
         </div>
 
-        <div class="ml-5 mr-0" id="content", name="content">
+        <div class="ml-5 mr-0 mb-5" id="content", name="content">
             <div class="row justify-content-center">
                 <div class="col-9">
                     <h1 class="mt-2">Covid localizations</h1>
@@ -35,7 +49,7 @@
         </div>
 
         <div class="footy">
-            <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+            <footer id="sticky-footer" class="py-2 bg-dark text-white-50">
                 <div class="container text-center">
                     {% if user.is_authenticated %}
                         Hello, you are logged as: {{name}}, <a href="/logout">logout</a>

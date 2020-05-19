@@ -5,7 +5,16 @@
 {% block content %}
     <h1>Home page</h1>
     {% if user.is_authenticated %}
-        <p>{{upload_info}}</p>
+        <p>
+            {{upload_info.0}}
+        	<ul>
+				{% for item in upload_info %}
+					{% if item != upload_info.0 %}
+						<li> {{item}} </li>
+					{% endif %}
+				{% endfor %}
+        	</ul>
+        </p>
         <p>{{status_info}}</p>
     {% endif %}
 {% endblock %}
