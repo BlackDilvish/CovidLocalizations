@@ -82,13 +82,14 @@ def instruction(response):
 
 
 def check_upload(name):
+    upload_info = []
     if LocalizationsData.objects.filter(name=name).count() == 0:
-        upload_info = "You haven't uploaded your json file yet!"
+        upload_info.append("You haven't uploaded your json file yet!")
     else:
-        upload_info = "You've already uploaded your localizations from "
+        upload_info.append("You've already uploaded your localizations from:")
         data = LocalizationsData.objects.filter(name=name)
         for item in data:
-            upload_info += item.json_file_date() + "\n"
+            upload_info.append(item.json_file_date())
 
     return upload_info
 
@@ -102,7 +103,7 @@ def check_status(name):
         status_info = "You've been infected since " + HealthStatus.objects.get(name=name).covid_start_date()
     else:
         t = HealthStatus.objects.get(name=name)
-        status_info = "You were infected from " + t.covid_start_date() + " to " +  t.covid_end_date()
+        status_info = "You were infected from " + t.covid_start_date() + " to " +  t.covid_end_date() + "."
 
     return status_info
 
