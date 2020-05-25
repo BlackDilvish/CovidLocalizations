@@ -11,8 +11,15 @@
 <h1> Heatmap </h1>
     {% if user.is_authenticated %}
         {% include "localizator/template_select.html" with action="heatmap" button_name="Show" %}
-        {% if localizations %}
-            {% include "heatmap/template_heatmap.html" with mapid="map1" center=center localizations=localizations %}
+        {% if contacts_map.localizations %}
+            <h3>Infected locations</h3>
+            {% include "heatmap/template_heatmap.html" with mapid="map1" center=contacts_map.center localizations=contacts_map.localizations %}
+        {% else %}
+            <h3>There is nothing to display</h3>
+        {% endif %}
+        {% if user_map.localizations %}
+            <h3>User's locations</h3>
+            {% include "heatmap/template_heatmap.html" with mapid="map2" center=user_map.center localizations=user_map.localizations %}
         {% else %}
             <h3>There is nothing to display</h3>
         {% endif %}
