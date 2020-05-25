@@ -2,7 +2,60 @@
 
 {% block title %} Contact info {% endblock %}
 
+{% block head2 %}
+	<style>
+		.map-info {
+			display: inline-block;
+			margin-right: 50px;
+		}
+	</style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{% endblock %}
+
 {% block content %}
-	{% include "list_meetings/contact_map.html" with mapid="1" lat1=lat1 lon1=lon1 lat2=lat2 lon2=lon2 %}
-	<a href="javascript:history.back()">Go Back</a>
+	<div class="map-info">
+		{% include "list_meetings/contact_map.html" with mapid="1" lat1=lat1 lon1=lon1 lat2=lat2 lon2=lon2 %}
+		<a href="javascript:history.back()">Go Back</a>
+	</div>
+	<div class="map-info">
+		<table class="table">
+					<tr class="success">
+					<th>Your mean of transport: </th> <td>{{user_act}}</td> 
+					</tr>
+					<tr class="danger">
+					<th>Infected person's mean of transport: </th> <td>{{inf_act}}</td> 
+					</tr>
+		</table>
+		 
+		{% if user_act == inf_act %}
+			Your mean of transport was the same as infected person's <br>
+			which <b>increases</b> the probability of being infected.
+		{% else %}
+			Your mean of transport differs from infected person's <br>
+			which <b>decreases</b> the probability of being infected. 
+		{% endif %}
+		<br><br>
+		
+		{% if near == 1 %}
+			You were close to the infected person <br>
+			which <b>increases</b> the probability of being infected.
+		{% else %}
+			You weren't that close to the infected person <br>
+			which <b>decreases</b> the probability of being infected. 
+		{% endif %}
+		<br><br>
+		
+		{% if duration >= 10 %}
+			You spent some time with the infected person <br>
+			which <b>increases</b> the probability of being infected.
+		{% else %}
+			You spent little time with the infected person <br>
+			which <b>decreases</b> the probability of being infected. 
+		{% endif %}
+		<br><br>
+		NONE means the person wasn't moving </br>
+		e.g. the person could be inside a building. 
+	</div>
 {% endblock %}
