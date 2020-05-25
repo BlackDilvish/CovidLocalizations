@@ -112,9 +112,11 @@ def get_localizations(name, file_date):
         
     return localizations
 
-
+def get_user_localizations(name, file_date):
+    return list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
+    
 def prepare_contacts(contacts, name, file_date):
-    user_data = list(LocalizationsData.objects.filter(name=name, file_date=file_date).values())
+    user_data = get_user_localizations(name, file_date)
 
     if len(user_data) <= 0:
         return False
