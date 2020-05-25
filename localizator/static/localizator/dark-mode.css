@@ -1,0 +1,46 @@
+[data-theme="dark"]{
+  background-color: #111 !important;
+  color: #ddd;
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #000 !important;
+}
+
+[data-theme="dark"] .bg-black {
+  background-color: #ddd !important;
+}
+
+[data-theme="dark"] .side_bar {
+  background-color: #333 !important;
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: #333 !important;
+  color: #ddd !important;
+}
+
+[data-theme="dark"] .py-2, .custom-select, .map-table, .table-stripe {
+  background-color: #333 !important;
+  color: #ddd !important;
+}
+
+[data-theme="dark"] .btn-success {
+  background-color: rgb(0, 97, 0) !important;
+  color: #ddd !important;
+}
+
+/* [data-theme="dark"] .custom-select {
+  background-color: #333 !important;
+  color: #ddd !important;
+}
+
+[data-theme="dark"] .map-table {
+  background-color: #333 !important;
+  color: #ddd !important;
+}
+
+[data-theme="dark"] .table-stripe {
+  background-color: #333 !important;
+  color: #ddd !important;
+} */

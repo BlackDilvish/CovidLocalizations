@@ -8,7 +8,7 @@
 table, th, td {
   border: 1px solid black;
 }
-.map_table {
+.map-table {
 	display: inline-block;
 	margin-right: 50px;
 }
@@ -25,14 +25,14 @@ table, th, td {
 {% if user.is_authenticated %}
 	{% include "localizator/template_select.html" with action="local_hist" button_name="Show" %}
 	{% for item in output %}
-		<div class="map_table">
+		<div class="map-table">
 			{% if item|length == 7 %}
 				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
 			{% else %}
 				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude %}
 			{% endif %}
 		</div>
-		<div class="map_table">
+		<div class="map-table">
 			<table style="max-width:400px">
 			{% for key, val in item.items %}
 				<tr class=""> 
@@ -41,7 +41,6 @@ table, th, td {
 				</tr>
 			{% endfor %}
 			</table>
-			<br><br>
 		</div>
 	{% endfor %}
 	<br>
