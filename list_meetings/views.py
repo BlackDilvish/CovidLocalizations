@@ -3,6 +3,7 @@ from localizator.models import LocalizationsData, HealthStatus
 from django.shortcuts import render
 from datetime import datetime, timedelta
 import geopy.distance
+from django import template
 
 divider = 1E7
 precision = 3
@@ -30,11 +31,14 @@ def list_meetings(request):
     return render(request, 'list_meetings/list_meetings.html', response_dict)
 
 
-def contact(request, lat1, lon1, lat2, lon2):
+def contact(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
     username = request.user.username
-    return render(request, 'list_meetings/contact.html', {'mapid': "mapid", 'lat1': lat1,
-                                                          'lon1': lon1, 'lat2': lat2,
-                                                          'lon2': lon2, 'name': username})
+    return render(request, 'list_meetings/contact.html', 
+    						{'mapid': "mapid", 'lat1': lat1,
+                             'lon1': lon1, 'lat2': lat2,
+                             'lon2': lon2, 'name': username,
+                             'inf_act': inf_act, 'user_act': user_act, 
+                             'near': near, 'duration': duration})
 
 
 def by_distance(contact):
@@ -70,6 +74,14 @@ def get_contacts(name, file_date):
     return contacts
 
 
+def get_act_type(timeline_data):
+    if "activityType" in timeline_data:
+        act_type = timeline_data["activityType"]
+    else:
+        act_type = "unknown"
+    return act_type
+    
+
 def add_activity(timeline_object, contacts, status):
     timeline_data = timeline_object['activitySegment']
     start_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['startTimestampMs'])/1000)
@@ -78,11 +90,15 @@ def add_activity(timeline_object, contacts, status):
     end_date_second = end_date_first + timedelta(minutes=5)
     if status.start_date < end_date_first.date() and status.start_date < end_date_second.date() and \
         status.end_date > start_date_first.date() and status.end_date > start_date_second.date():
-
+        
+        act_type = get_act_type(timeline_data)
+        
+        duration = int((end_date_first-start_date_first).total_seconds()/60.0) 
         first_place = dict(location=timeline_data['startLocation'], startTimestamp=start_date_first,
-                       endTimestamp=end_date_first)
+                       endTimestamp=end_date_first, infected_act=act_type, duration=duration)
+        duration = int((end_date_second-start_date_second).total_seconds()/60.0)                
         second_place = dict(location=timeline_data['endLocation'], startTimestamp=start_date_second,
-                        endTimestamp=end_date_second)     
+                        endTimestamp=end_date_second, infected_act=act_type, duration=duration)     
         contacts.append(first_place)
         contacts.append(second_place)
 
@@ -93,8 +109,9 @@ def add_place(timeline_object, contacts, status):
     end_time = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
 
     if status.start_date < end_time.date() and status.end_date > start_time.date():
+        duration = int((end_time-start_time).total_seconds()/60.0)
         place = dict(location=timeline_data['location'], startTimestamp=start_time,
-                    endTimestamp=end_time)
+                    endTimestamp=end_time, infected_act = 'NONE', duration=duration)
         contacts.append(place)
 
 
@@ -157,6 +174,11 @@ def set_distance_place(contact, timeline_object):
     if 'distance' not in contact or distance < contact['distance']:
         contact['distance'] = round(float(distance), precision)
         contact['user_loc'] = coordinates
+        contact['user_act'] = 'NONE'
+        if contact['distance'] < 1:
+        	contact['near'] = 1
+        else:
+        	contact['near'] = 0
 
 
 def set_distance_activity(contact, timeline_object):
@@ -182,6 +204,15 @@ def set_distance_activity(contact, timeline_object):
         distance = distance2
         coordinates = dict(latitude=str(round(second_lat, precision)), longitude=str(round(second_long, precision)))
 
+    act_type = get_act_type(timeline_object)
+
     if 'distance' not in contact or distance < contact['distance']:
         contact['distance'] = round(float(distance), precision)
         contact['user_loc'] = coordinates
+        contact['user_act'] = act_type
+        if contact['distance'] < 1:
+        	contact['near'] = 1
+        else:
+        	contact['near'] = 0
+
+
