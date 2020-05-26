@@ -13,9 +13,14 @@
 		zoomOffset: -1
 	}).addTo(mymap);
 	
-	var marker = L.marker([{{lat1}}, {{lon1}}]).addTo(mymap);
-    {% if lat2 %}
-        var marker = L.marker([{{lat2}}, {{lon2}}]).addTo(mymap);
-    {% endif %}
+	var start_point = [{{lat1}}, {{lon1}}];
+	var marker = L.marker(start_point).addTo(mymap);
 
+	{% if lat2 and lon2 %}
+		var end_point = [{{lat2}}, {{lon2}}];
+		var marker = L.marker(end_point).addTo(mymap);
+		var polyline = L.polyline({{waypoints}}, {color: 'violet'}).addTo(mymap);
+		mymap.fitBounds(polyline.getBounds());
+	{% endif %}
+	
 </script>

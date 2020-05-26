@@ -3,6 +3,8 @@ from localizator.models import LocalizationsData
 from django.http import HttpResponse
 from datetime import datetime
 
+divider = 1E7
+precision = 3
 
 def local_hist(response):
 	username = response.user.username
@@ -46,13 +48,28 @@ def history(hist):
 	return output
 
 
+def prepare_waypoints(waypoints, start_point, end_point):
+	data = [start_point]
+
+	for point in waypoints:
+		latitude = round(float(point['latE7'] / divider), precision)
+		longitude = round(float(point['lngE7'] / divider), precision)
+		data.append([latitude, longitude])
+
+	data.append(end_point)
+	return data
+
+
 def convert(output):
 	for item in output:
 		for key, val in item.items():
 			if key == "Start_time" or key == "End_time":
 				item[key] = datetime.utcfromtimestamp(int(val)/1000)
 			elif isinstance(val, int):
-				item[key] = str(float(val)/10e6)
+				item[key] = round(float(val / divider), precision)
+		if "Waypoints" in item:
+			item["Waypoints"] = prepare_waypoints(item["Waypoints"], [item["Start_latitude"], item["Start_longitude"]], 
+												  					 [item["End_latitude"], item["End_longitude"]])
 	return output
 
 		
@@ -86,7 +103,12 @@ def item_activity(item, i):
 	
 	if "activities" in data and "probability" in data["activities"][0]:
 		act["Probability"] = data["activities"][0]["probability"]
-
+	
+	if "waypointPath" in data:
+		act["Waypoints"] = data["waypointPath"]["waypoints"]
+	else:
+		act["Waypoints"] = []
+		
 	return act
 
 
