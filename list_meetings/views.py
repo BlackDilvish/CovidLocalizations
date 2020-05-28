@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from localizator.models import LocalizationsData, HealthStatus
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
 import geopy.distance
+import urllib
 from django import template
 
 divider = 1E7
@@ -39,6 +40,23 @@ def contact(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
                              'lon2': lon2, 'name': username,
                              'inf_act': inf_act, 'user_act': user_act, 
                              'near': near, 'duration': duration})
+
+
+def external(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
+    username = request.user.username
+    params = urllib.urlencode({'mapid': "mapid", 'lat1': lat1,
+                   'lon1': lon1, 'lat2': lat2,
+                   'lon2': lon2, 'name': username,
+                   'inf_act': inf_act, 'user_act': user_act,
+                   'near': near, 'duration': duration})
+    return render(request, 'list_meetings/contact.html',
+                  {'mapid': "mapid", 'lat1': lat1,
+                   'lon1': lon1, 'lat2': lat2,
+                   'lon2': lon2, 'name': username,
+                   'inf_act': inf_act, 'user_act': user_act,
+                   'near': near, 'duration': duration})
+    #return redirect('https://covidlocalizations.herokuapp.com/list-meetings/contact/',
+     #             'https://covidlocalizations.herokuapp.com/list-meetings/contact/?%s'%params)
 
 
 def by_distance(contact):

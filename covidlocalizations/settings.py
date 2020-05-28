@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'django_inlinecss',
     'localizator.apps.LocalizatorConfig',
     'register.apps.RegisterConfig',
     'local_hist.apps.LocalHistConfig',

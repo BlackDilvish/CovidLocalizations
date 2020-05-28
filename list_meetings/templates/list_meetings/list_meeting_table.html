@@ -1,0 +1,29 @@
+{%block content%}
+<h1>Possible contacts with diagnosed people</h1>
+    {% if list_of_meetings %}
+        <table class="table table-stripe" style="width: 100%; color: black; border-collapse: collapse; border: 1px solid black;">
+            <tr>
+                <th style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">Lp.</th>
+                <th style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">Distance to person</th>
+                <th style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">Begin date</th>
+                <th style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">End date</th>
+                <th style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">Link to map and detailed data</th>
+            </tr>
+        {%for meetings in list_of_meetings %}
+            <tr>
+                <td style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">{{forloop.counter}}.</td>
+                <td style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">{{meetings.distance}} km</td>
+                <td style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">{{meetings.startTimestamp}}</td>
+                <td style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">{{meetings.endTimestamp}}</td>
+                <td style="border: 1px solid black;height: 100%; padding: 10px; text-align: center;">
+                <a href="{{ meetings.url }}">
+                    Check details and map
+                </a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h3>There are no confirmed close contacts with you! Nevertheless we ask you to check it daily.</h3>
+    {% endif %}
+<script src="bootstrap.min.js" ></script>
+{% endblock %}
