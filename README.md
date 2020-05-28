@@ -1,4 +1,5 @@
 # [Covid localizations]
+[![Coverage Status](https://coveralls.io/repos/github/BlackDilvish/CovidLocalizations/badge.svg?branch=master)](https://coveralls.io/github/BlackDilvish/CovidLocalizations?branch=master)
 ## Participants 
 - Gabriel Naleźnik - team leader
 - Olga Kubiszyn
@@ -16,7 +17,6 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 - Displaying probability if user was traveling by foot or using some type of vehicle 
 (e.g.: if user was travelling by bus he could have bigger chance to become infected)
 - Notifications (emails) with information about probable meeting with infected person in the past
-- Daily tips: how to avoid being infected!
 - Displaying your nearest distance from an infected person
 - Displaying dangerous localizations in leaflet maps widget 
 
@@ -57,10 +57,9 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 
 ### Week 6  (01.06-07.06):
 - Advanced web page (design)
-- Displaying safe way to chosen point (additional feature)
+- Displaying places where the user met an infected person
 
 ### Week 7  (08.06-14.06):
-- Automated loading localization (without loading json file by hand)
 - Writing unittests for 95% of the code
 - Finishing previous tasks if obstacles are met
 
