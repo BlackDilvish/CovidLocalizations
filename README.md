@@ -1,5 +1,5 @@
 # [Covid localizations]
-[![Coverage Status](https://coveralls.io/repos/github/BlackDilvish/CovidLocalizations/badge.svg?branch=master)](https://coveralls.io/github/BlackDilvish/CovidLocalizations?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/BlackDilvish/CovidLocalizations/badge.png?branch=master)](https://coveralls.io/github/BlackDilvish/CovidLocalizations?branch=master)
 ## Participants 
 - Gabriel Naleźnik - team leader
 - Olga Kubiszyn
@@ -27,7 +27,7 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 
 ## Advanced project description:
 - Product backlog on Trello: https://trello.com/b/25mkJJVa/covid-localizations
-- Url: https://covidlocalizations.herokuapp.com
+- Go to our website: https://covidlocalizations.herokuapp.com
 
 ### Week 1 (27.04-03.05):
 - Basic web page
