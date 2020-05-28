@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 import json
 import list_meetings.views as list_meetings
 
+#thanks to: https://startcodingnow.com/making-your-own-email-templates-in-django/, for way of sending html template in e-mail
+
 
 def index(response):
     return HttpResponse('Strona covid local <a href="/home">home</a>')
