@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'localizator.apps.LocalizatorConfig',
     'register.apps.RegisterConfig',
     'local_hist.apps.LocalHistConfig',
+    'list_meetings.apps.ListMeetingsConfig',
+    'heatmap.apps.HeatmapConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,9 +85,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mnczwauv',
         'USER': 'mnczwauv',
-        'PASSWORD': 'CAcPt_CHx8tOLB7oKUmLqNrxEt3v4112',
+        'PASSWORD': os.environ['POSTGRES_PASS'],
         'HOST': 'balarama.db.elephantsql.com',
         'PORT': '5432',
+        'TEST': {
+            'NAME': 'mnczwauv',
+        },
     }
 }
 
@@ -133,7 +138,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+	os.path.join(BASE_DIR, 'covidlocalizations/static'),
 )
 
 CRISPY_TEMPLATE_PACK="bootstrap4"
@@ -141,3 +146,13 @@ CRISPY_TEMPLATE_PACK="bootstrap4"
 LOGIN_REDIRECT_URL = '/home'
 
 LOGOUT_REDIRECT_URL = '/register/loggedout'
+
+# Email validation
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'covid.localizations@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ['GMAIL_PASS']
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #To display email in console

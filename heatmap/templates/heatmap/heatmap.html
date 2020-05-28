@@ -1,0 +1,40 @@
+{% extends "localizator/leaflet_map.html" %}
+
+{% block title %} Fancy heatmap {% endblock %}
+
+{% block head2 %}
+<style>
+li {
+    display: inline-block;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+</style>
+{% load static %}
+<script src="{% static 'heatmap/leaflet-heat.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h1> Heatmap </h1>
+    {% if user.is_authenticated %}
+        {% include "localizator/template_select.html" with action="heatmap" button_name="Show" %}
+            <li>
+                {% if contacts_map.localizations %}
+                    <h3>Possibly infected locations</h3>
+                    {% include "heatmap/template_heatmap.html" with mapid="map1" center=contacts_map.center localizations=contacts_map.localizations %}
+                {% else %}
+                    <h3>No possibly infected locations found</h3>
+                {% endif %}
+            </li>
+            <li>
+                {% if user_map.localizations %}
+                    <h3>User's locations</h3>
+                    {% include "heatmap/template_heatmap.html" with mapid="map2" center=user_map.center localizations=user_map.localizations %}
+                {% else %}
+                    <h3>No user's locations found</h3>
+                {% endif %}
+            </li>
+    {% else %}
+        <p>You need to <a href="/login">log in</a> to see your heatmap</p>
+    {% endif %}
+{% endblock %}

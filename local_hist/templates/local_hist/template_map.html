@@ -1,0 +1,26 @@
+<div id="map{{mapid}}" style="width: 500px; height: 400px; z-index:0;"></div>
+<script>
+
+	var mymap = L.map("map{{mapid}}").setView([{{lat1}}, {{lon1}}], 13);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+	
+	var start_point = [{{lat1}}, {{lon1}}];
+	var marker = L.marker(start_point).addTo(mymap);
+
+	{% if lat2 and lon2 %}
+		var end_point = [{{lat2}}, {{lon2}}];
+		var marker = L.marker(end_point).addTo(mymap);
+		var polyline = L.polyline({{waypoints}}, {color: 'violet'}).addTo(mymap);
+		mymap.fitBounds(polyline.getBounds());
+	{% endif %}
+	
+</script>

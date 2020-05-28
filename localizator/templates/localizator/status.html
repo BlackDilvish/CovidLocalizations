@@ -2,14 +2,34 @@
 
 {% block title %} Set your health status {% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
+<h1> Change your health status </h1>
+{% if error_date_message %}
+    <div class="alert alert-danger">{{error_date_message}}</div>
+{% endif %}
     {% if user.is_authenticated %}
-    <form method="post" action="{% url "status" %}">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" class="btn btn-success">Set status</button>
-    </form>
+        <form method="post" action="{% url "status" %}" >
+            {% csrf_token %}
+            <u1>
+                <div class="form-group form-check">
+                    <input type="checkbox", name="infected_present", value="clicked" class="form-check-input" id="1">
+                    <p><label class="form-check-label" for="infected_present">Are you infected Covid-19?</label></p>
+                    <input type="checkbox", name="infected_past", value="clicked" class="form-check-input" id="2">
+                    <p><label class="form-check-label" for="infected_past">Were you infected Covid-19?</label></p>
+                </div>
+                <p><label for="3"></label>When were you diagnosed?</label></p>
+                <div class="form-group col-md-3">
+                    <input type="date", name="start_date", value="start_date", class="form-control" id="3">
+                </div>
+                <p><label for="4"></label>When were you considered healthy?</label></p>
+                <div class="form-group col-md-3">
+                    <input type="date", name="end_date", value="end_date", class="form-control" id="4">
+                </div>
+            </u1>
+            <button type="submit", name="save", value="save", class="btn btn-danger">Save status</button>
+        </form>
     {% else %}
-    <p>You need to <a href="/login">log in</a> to upload your localization</p>
+    <p>You need to <a href="/login">log in</a> to set your status</p>
     {% endif %}
 {% endblock %}

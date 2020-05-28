@@ -1,0 +1,36 @@
+{% extends "localizator/base.html" %}
+
+{% block title %} List of meetings {% endblock %}
+
+{%block content%}
+<h1>Possible contacts with diagnosed people</h1>
+{% if user.is_authenticated %}
+    {% include "localizator/template_select.html" with action="list_meetings" button_name="Show" %}
+    {% if list_of_meetings %}
+        <table class="table table-stripe">
+            <tr>
+                <th>Lp.</th>
+                <th>Distance to person</th>
+                <th>Begin date</th>
+                <th>End date</th>
+                <th>Link to map and detailed data</th>
+            </tr>
+        {%for meetings in list_of_meetings %}
+            <tr>
+                <td>{{forloop.counter}}.</td>
+                <td>{{meetings.distance}} km</td>
+                <td>{{meetings.startTimestamp}}</td>
+                <td>{{meetings.endTimestamp}}</td>
+                <td><a href="{% url 'contact' meetings.location.latitude meetings.location.longitude meetings.user_loc.latitude meetings.user_loc.longitude meetings.infected_act meetings.user_act meetings.near meetings.duration %}">
+                    Check details and map
+                </a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h3>There are no confirmed close contacts with you! Nevertheless we ask you to check it daily.</h3>
+    {% endif %}
+{% else %}
+<p>You need to <a href="/login">log in</a> to show your contacts with diagnosed people</p>
+{% endif %}
+{% endblock %}

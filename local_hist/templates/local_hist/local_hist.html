@@ -2,20 +2,51 @@
 
 {% block title %}Localization history{% endblock %}
 {% load crispy_forms_tags %}
-{% block head %}{% endblock %}
+
+{% block head %}
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+.map-table {
+	display: inline-block;
+	margin-right: 50px;
+}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+{% endblock %}
+
 {% block content %}
+<h1> Localization history </h1>
+{% if user.is_authenticated %}
+	{% include "localizator/template_select.html" with action="local_hist" button_name="Show" %}
 	{% for item in output %}
-
-		{% if item|length == 4 %}
-			<p>Visit place on <a href="/local_hist/visit/{{item.PlacesLatitude}}/{{item.PlacesLongitude}}">map</a></p>
-		{% else %}
-			<p>Activity on <a href="/local_hist/activity/{{item.startLatitude}}/{{item.startLongitude}}/{{item.endLatitude}}/{{item.endLongitude}}">map</a></p>
-		{% endif %}
-
-		{% for key, val in item.items %}
-			{{key}} {{val}} <br> 
-		{% endfor %}
-		<br><br>
+		<div class="map-table">
+			{% if item|length == 7 %}
+				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Places_latitude lon1=item.Places_longitude %}
+			{% else %}
+				{% include "local_hist/template_map.html" with mapid=forloop.counter0 lat1=item.Start_latitude lon1=item.Start_longitude lat2=item.End_latitude lon2=item.End_longitude waypoints=item.Waypoints %}
+			{% endif %}
+		</div>
+		<div class="map-table">
+			<table style="max-width:400px">
+			{% for key, val in item.items %}
+				{% if key != "Waypoints" %}
+					<tr class=""> 
+						<th>{{key}}</th> 
+						<td>{{val}}</td> 
+					</tr>
+				{% endif %}
+			{% endfor %}
+			</table>
+		</div>
 	{% endfor %}
 	<br>
+{% else %}
+<p>You need to <a href="/login">log in</a> to show your localizations history</p>
+{% endif %}
 {% endblock %}
