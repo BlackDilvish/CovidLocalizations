@@ -22,16 +22,12 @@ li {
                 {% if contacts_map.localizations %}
                     <h3>Possibly infected locations</h3>
                     {% include "heatmap/template_heatmap.html" with mapid="map1" center=contacts_map.center localizations=contacts_map.localizations %}
-                {% else %}
-                    <h3>No possibly infected locations found</h3>
                 {% endif %}
             </li>
             <li>
                 {% if user_map.localizations %}
                     <h3>User's locations</h3>
                     {% include "heatmap/template_heatmap.html" with mapid="map2" center=user_map.center localizations=user_map.localizations %}
-                {% else %}
-                    <h3>No user's locations found</h3>
                 {% endif %}
             </li>
     {% else %}
