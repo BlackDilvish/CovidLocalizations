@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from localizator.models import LocalizationsData, HealthStatus
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
 import geopy.distance
+import urllib
 from django import template
 
 divider = 1E7
@@ -39,6 +40,21 @@ def contact(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
                              'lon2': lon2, 'name': username,
                              'inf_act': inf_act, 'user_act': user_act, 
                              'near': near, 'duration': duration})
+
+
+def external(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
+    username = request.user.username
+    params = urllib.urlencode({'mapid': "mapid", 'lat1': lat1,
+                   'lon1': lon1, 'lat2': lat2,
+                   'lon2': lon2, 'name': username,
+                   'inf_act': inf_act, 'user_act': user_act,
+                   'near': near, 'duration': duration})
+    return render(request, 'list_meetings/contact.html',
+                  {'mapid': "mapid", 'lat1': lat1,
+                   'lon1': lon1, 'lat2': lat2,
+                   'lon2': lon2, 'name': username,
+                   'inf_act': inf_act, 'user_act': user_act,
+                   'near': near, 'duration': duration})
 
 
 def by_distance(contact):
@@ -181,6 +197,8 @@ def set_distance_place(contact, timeline_object):
         	contact['near'] = 0
 
 
+    #thanks to: https://stackoverflow.com/a/43211266, Kurt Peek for geopy distance calculation idea, licnse(as Stack Overflow answer):
+    #https://creativecommons.org/licenses/by-sa/3.0/, thus this modifed code has to be available under same license
 def set_distance_activity(contact, timeline_object):
     first_long = int(timeline_object['startLocation']['longitudeE7']) / divider
     first_lat = int(timeline_object['startLocation']['latitudeE7']) / divider
@@ -193,7 +211,6 @@ def set_distance_activity(contact, timeline_object):
     point1 = (first_long, first_lat)
     point2 = (second_long, second_lat)
     point3 = (third_long, third_lat)
-
     distance1 = geopy.distance.vincenty(point1, point3).km
     distance2 = geopy.distance.vincenty(point2, point3).km
 

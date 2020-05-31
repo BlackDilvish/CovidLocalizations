@@ -88,6 +88,9 @@ DATABASES = {
         'PASSWORD': os.environ['POSTGRES_PASS'],
         'HOST': 'balarama.db.elephantsql.com',
         'PORT': '5432',
+        'TEST': {
+            'NAME': 'mnczwauv',
+        },
     }
 }
 

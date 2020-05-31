@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect  
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template.loader import render_to_string
 from .models import LocalizationsData, HealthStatus
 from .forms import FileForm
 from datetime import date
@@ -8,6 +9,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 import json
 import list_meetings.views as list_meetings
+
+#thanks to: https://startcodingnow.com/making-your-own-email-templates-in-django/, for way of sending html template in e-mail
 
 
 def index(response):
@@ -71,18 +74,42 @@ def prepare_contacts(contacts, json_data):
 
 
 def execute_mail(contacts, email):
-    result_str = str('')
-    for i, contact in enumerate(contacts):
-        result_str += f'{i}. {contact["distance"]} in latitude: {contact["location"]["latitudeE7"]} ' \
-                     f'and longitude: {contact["location"]["longitudeE7"]}.\n'
+    list_meetings.map_contacts_locations(contacts)
+    add_url_to_contacts(contacts)
+    message = render_to_string('list_meetings/list_meeting_table.html', dict(list_of_meetings=contacts)).strip();
+    title = get_mail_title()
+    no_html_str = get_no_html()
+    mail_address = get_mail_address()
 
     send_mail(
-        '[COVID LOCALIZATIONS] Important! Possible contact with infected person occured.',
-        'There is a chance that you had close contacts (smaller than 250m) in following places: \n' + result_str,
-        'covid-localizations@no-reply.com',
-        [email],
+        subject=title,
+        message=no_html_str,
+        html_message=message,
+        from_email=mail_address,
+        recipient_list=[email],
         fail_silently=False,
     )
+
+
+def add_url_to_contacts(contacts):
+    start_str = "https://covidlocalizations.herokuapp.com/list-meetings/contact"
+    for contact in contacts:
+        contact['url'] = start_str + '/' + contact['location']['latitude'] + '/' + contact['location']['longitude'] \
+                         + '/' + contact['user_loc']['latitude'] + '/' + contact['user_loc']['longitude'] + '/' + \
+                         contact['infected_act'] + '/' + contact['user_act'] + '/' + str(contact['near']) + '/' + \
+                         str(contact['duration'])
+
+
+def get_mail_address():
+    return 'covid-localizations@no-reply.com'
+
+
+def get_mail_title():
+    return '[COVID LOCALIZATIONS] Important! Possible contact with infected person occured.',
+
+
+def get_no_html():
+    return 'There is a chance that you had close contacts (smaller than 250m) in following places: \n'
 
 
 def status(response):
@@ -182,4 +209,3 @@ def check_for_label(text):
 
 def check_status_dates(start_date, end_date):
     return start_date <= end_date and start_date <= date.today() and end_date <= date.today()
-        
