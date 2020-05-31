@@ -104,9 +104,7 @@ def add_activity(timeline_object, contacts, status):
     start_date_second = start_date_first + timedelta(minutes=5)
     end_date_first = datetime.utcfromtimestamp(int(timeline_data['duration']['endTimestampMs'])/1000)
     end_date_second = end_date_first + timedelta(minutes=5)
-    if status.start_date < end_date_first.date() and status.start_date < end_date_second.date() and \
-        status.end_date > start_date_first.date() and status.end_date > start_date_second.date():
-        
+    if status.start_date < end_date_first.date() and status.start_date < end_date_first.date():
         act_type = get_act_type(timeline_data)
         
         duration = int((end_date_first-start_date_first).total_seconds()/60.0) 
