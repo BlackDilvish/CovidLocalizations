@@ -1,8 +1,11 @@
+
 from django.shortcuts import render
 from list_meetings.views import get_contacts, get_user_localizations
+import geopy.distance
 
 divider = 1E7
 precision = 7
+minimal_distance = 0.025
 
 def heatmap(response):
     username = response.user.username
@@ -27,9 +30,17 @@ def heatmap(response):
                         'name': username, 
                         'center': [50.067, 19.910], 
                         'localizations': user_coordinates}
+        contacts_and_user_map = {}
+        if len(user_coordinates) and len(contacts_coordinates):
+            contacts_and_user_map = {'mapid': 3, 
+                                     'name': username, 
+                                     'center': [50.067, 19.910], 
+                                     'localizations': get_user_and_contacts_coordinates(user_coordinates, contacts_coordinates)}
 
-        return render(response, 'heatmap/heatmap.html', {'contacts_map': contacts_map, 'user_map': user_map, 'name': username})
-
+        return render(response, 'heatmap/heatmap.html', {'contacts_map': contacts_map, 
+                                                         'user_map': user_map, 
+                                                         'contacts_and_user_map': contacts_and_user_map, 
+                                                         'name': username})
     return render(response, 'heatmap/heatmap.html', {'name': username})
 
 
@@ -42,6 +53,7 @@ def get_contacts_coordinates(contacts):
         coordinates.append([latitude, longitude])
 
     return coordinates
+
 
 def get_user_coordinates(user_localizations):
     coordinates = []
@@ -64,3 +76,14 @@ def get_user_coordinates(user_localizations):
                 coordinates.append([latitude, longitude])
 
     return coordinates
+
+
+def get_user_and_contacts_coordinates(user_coordinates, contacts_coordinates):
+    final_coordinates = []
+    for user_item in user_coordinates:
+        for contact_item in contacts_coordinates:
+                distance = geopy.distance.vincenty(user_item, contact_item).km
+                if distance < minimal_distance:
+                    final_coordinates.append(user_item)
+                    
+    return final_coordinates
