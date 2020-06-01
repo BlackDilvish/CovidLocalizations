@@ -1,7 +1,7 @@
 from django.test import TestCase
 from . import views
 
-class LocalizatorTest(TestCase):
+class LocalizatorTestCase(TestCase):
     def setUp(self):
         pass
 
