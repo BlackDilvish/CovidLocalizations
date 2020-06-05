@@ -1,10 +1,22 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from . import views
 
 class HeatmapTestCase(TestCase):
     def setUp(self):
-        pass
+        self.client = Client()
+    
+    def test_heatmap_get(self):
+        response = self.client.get('/heatmap/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_heatmap_empty_post(self):
+        response = self.client.post(path = '/heatmap/', data = {'choose_month': '', 'choose_year': ''})
+        self.assertEqual(response.status_code, 200)
 
+    def test_heatmap_nonempty_post(self):
+        response = self.client.post(path = '/heatmap/', data = {'choose_month': 'June', 'choose_year': '2020'})
+        self.assertEqual(response.status_code, 200)
+    
     def test_get_user_coordinates(self):
         points = {'data': { 'timelineObjects': [] }}
         points['data']['timelineObjects'].append({"activitySegment" : {
@@ -17,7 +29,7 @@ class HeatmapTestCase(TestCase):
                     }})
 
         self.assertEqual(views.get_user_coordinates([points]), [[1,2], [0,5], [3,4]])
-
+    
     def test_get_contacts_coordinates(self):
         points = { "location" : { "latitudeE7" : 0, "longitudeE7" : 50000000}}
 
