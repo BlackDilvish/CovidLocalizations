@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from datetime import date
+import os
 from . import views
 from . import models
 
@@ -19,6 +20,10 @@ class LocalizatorTestViews(TestCase):
         self.assertEqual(views.get_error_validation(), 
                         'Unfortunately sent file is not valid json. Please, check your data.')
 
+    def test_get_error_format(self):
+        self.assertEqual(views.get_error_format(), 
+                        'It seems that your file is valid JSON, but it does not contain required content')
+
     def test_get_error_date(self):
         self.assertEqual(views.get_error_date(), 
                         'Selected dates are incorrect!')
@@ -26,9 +31,49 @@ class LocalizatorTestViews(TestCase):
     def test_check_for_label(self):
         self.assertEqual(views.check_for_label('nolabel'), False)
 
-    def test_index(self):
+    def test_check_status_dates(self):
+        self.assertEqual(views.check_status_dates(date.today(), date.today()), True)
+
+    def test_get_mail_title(self):
+        status = '[COVID LOCALIZATIONS] Important! Possible contact with infected person occured.' in views.get_mail_title()
+        self.assertEqual(status, True)
+
+    def test_home(self):
         response = self.client.get('/home')
         self.assertEqual(response.status_code, 200)
+
+    def test_upload_get(self):
+        response = self.client.get('/upload')
+        self.assertEqual(response.status_code, 200)
+
+    def test_upload_post(self):
+        response = self.client.post(path='/upload', data={'file': ''})
+        self.assertEqual(response.status_code, 200)
+
+    def test_status_get(self):
+        response = self.client.get('/status')
+        self.assertEqual(response.status_code, 200)
+
+    def test_status_post(self):
+        response = self.client.post(path='/status', data={})
+        self.assertEqual(response.status_code, 200)
+
+    def test_instruction(self):
+        response = self.client.get('/instruction')
+        self.assertEqual(response.status_code, 200)
+
+    def test_convert_date(self):
+        converted = views.convert_date('')
+        self.assertEqual(converted, date.today())
+
+    def test_validate_json(self):
+        with open('test.json', 'w+') as f:
+            f.write('{"key": 0}')
+            validated = views.validate_json(f)
+
+        os.remove('test.json')
+        
+        self.assertEqual(validated, False)
 
 
 class LocalizatorTestModels(TestCase):
