@@ -1,11 +1,37 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from . import views
 from datetime import datetime
+from django.urls import reverse
 
 class LocalHistTestCase(TestCase):
     def setUp(self):
-        pass
+        self.client = Client()
 
+    def test_local_hist_post(self):
+        response = self.client.post(path = '/local_hist/', data = {'choose_month': 'January', 'choose_year': '2019'})
+        self.assertEqual(response.status_code, 200) 
+            
+    def test_local_hist_empty_post(self):
+        response = self.client.post(path = '/local_hist/', data = {'choose_month': '', 'choose_year': ''})
+        self.assertEqual(response.status_code, 200)
+       	
+    def test_local_hist_get(self):
+        response = self.client.get('/local_hist/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'local_hist/local_hist.html') 
+        
+    def test_visit(self):
+        url = reverse('visit', args = [20, 50])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'local_hist/local_map.html')  
+        
+    def test_activity(self):
+        url = reverse('activity', args = [20, 50, 20, 50])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'local_hist/local_map.html')       
+	
     def test_prepare_waypoints(self):
         points = [[0,0], [5,5], [7,7], [10,10]] 
         waypoints = [{"latE7": 50000000, "lngE7": 50000000}, {"latE7": 70000000, "lngE7": 70000000}]
