@@ -26,14 +26,14 @@ def local_hist(response):
 def visit(response, lat, lon):
 	username = response.user.username
 	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat,
-															'lon1': lon, 'name': username})
+							      'lon1': lon, 'name': username})
 
 
 def activity(response, lat1, lon1, lat2, lon2):
 	username = response.user.username
 	return render(response, 'local_hist/local_map.html', {'mapid': "mapid", 'lat1': lat1,
-															'lon1': lon1, 'lat2': lat2,
-															'lon2': lon2, 'name': username})		  	
+							      'lon1': lon1, 'lat2': lat2,
+							      'lon2': lon2, 'name': username})		  	
 
 
 def history(hist):
@@ -70,7 +70,7 @@ def convert(output):
 		if "Waypoints" in item:
 		    if "Start_latitude" in item and "Start_longitude" in item and "End_latitude" in item and "End_longitude" in item:
 			    item["Waypoints"] = prepare_waypoints(item["Waypoints"], [item["Start_latitude"], item["Start_longitude"]], 
-												  					 [item["End_latitude"], item["End_longitude"]])
+								 [item["End_latitude"], item["End_longitude"]])
 	return output
 
 		
