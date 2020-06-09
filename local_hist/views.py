@@ -70,7 +70,7 @@ def convert(output):
 		if "Waypoints" in item:
 		    if "Start_latitude" in item and "Start_longitude" in item and "End_latitude" in item and "End_longitude" in item:
 			    item["Waypoints"] = prepare_waypoints(item["Waypoints"], [item["Start_latitude"], item["Start_longitude"]], 
-								 [item["End_latitude"], item["End_longitude"]])
+								  [item["End_latitude"], item["End_longitude"]])
 	return output
 
 		
