@@ -20,6 +20,30 @@ Covid localizations is web app that checks if you were near someone infected. Yo
 - Displaying your nearest distance from an infected person
 - Displaying dangerous localizations in leaflet maps widget 
 
+## Screenshots:
+
+<img src=".\covidlocalizations\static\home.png" width="800"/>
+- Home page
+
+<img src=".\covidlocalizations\static\darkmode.png" width="800"/>
+- Dark mode
+
+<img src=".\covidlocalizations\static\lochist.png" width="800"/>
+- History of user's localizations
+
+<img src=".\covidlocalizations\static\contacttab.png" width="800"/>
+- Table of contacts with infected people
+
+<img src=".\covidlocalizations\static\contactinfo.png" width="800"/>
+- Information about possible contact
+
+<img src=".\covidlocalizations\static\heatmap1.png" width="800"/>
+- Heatmap with possibly infected places
+
+<img src=".\covidlocalizations\static\heatmap2.png" width="800"/>
+- Heatmap with places where the user was and where he had contact with infected people
+
+
 ## Technologies:
 - Django
 - Leaflet an open-source JavaScript library for mobile-friendly interactive maps (https://leafletjs.com/examples.html)
