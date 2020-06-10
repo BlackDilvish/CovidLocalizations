@@ -1,9 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from local_hist.tests import TestItem
 from . import views
 import copy
 
 class ListMeetingsTestCase(TestCase):
     def setUp(self):
+        self.client = Client()
         self.contact = {
             'distance': '50.55',
             'location': {
@@ -11,6 +13,7 @@ class ListMeetingsTestCase(TestCase):
                 'longitudeE7': 192263489,
             }
         }
+        self.item = TestItem()
 
     def test_by_distance(self):
         self.assertEqual(views.by_distance(self.contact), 50.55)
@@ -27,6 +30,8 @@ class ListMeetingsTestCase(TestCase):
         self.assertEqual(test_contact['location']['longitude'], 
                         str(round(float(self.contact['location']['longitudeE7'] / views.divider),
                             views.precision)))
+    
+
 
 
     

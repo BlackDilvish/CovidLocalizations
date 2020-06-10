@@ -5,7 +5,7 @@
 {% block head2 %}
 
 {% load static %}
-<script src="{% static 'heatmap/leaflet-heat.js' %}"></script>
+    <script src="{% static 'heatmap/leaflet-heat.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -15,17 +15,14 @@
         {% if contacts_map.localizations %}
             <h3>Possibly infected locations</h3>
             {% include "heatmap/template_heatmap.html" with mapid="map1" center=contacts_map.center localizations=contacts_map.localizations %}
-            <p></p>
         {% endif %}
         {% if user_map.localizations %}
             <h3>User's locations</h3>
-                {% include "heatmap/template_heatmap.html" with mapid="map2" center=user_map.center localizations=user_map.localizations %}
-            <p></p>
+            {% include "heatmap/template_heatmap.html" with mapid="map2" center=user_map.center localizations=user_map.localizations %}
         {% endif %}
         {% if contacts_and_user_map.localizations %}
             <h3>Possible contacts</h3>
-                {% include "heatmap/template_heatmap.html" with mapid="map3" center=contacts_and_user_map.center localizations=contacts_and_user_map.localizations %}
-            <p></p>
+            {% include "heatmap/template_heatmap.html" with mapid="map3" center=contacts_and_user_map.center localizations=contacts_and_user_map.localizations %}
         {% endif %}
     {% else %}
         <p>You need to <a href="/login">log in</a> to see your heatmap</p>
