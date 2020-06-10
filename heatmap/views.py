@@ -82,8 +82,8 @@ def get_user_and_contacts_coordinates(user_coordinates, contacts_coordinates):
     final_coordinates = []
     for user_item in user_coordinates:
         for contact_item in contacts_coordinates:
-                distance = geopy.distance.vincenty(user_item, contact_item).km
-                if distance < minimal_distance:
-                    final_coordinates.append(user_item)
+            distance = geopy.distance.vincenty(user_item, contact_item).km
+            if distance < minimal_distance:
+                final_coordinates.append(user_item)
                     
     return final_coordinates
