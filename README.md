@@ -1,10 +1,10 @@
 # [Covid localizations]
 [![Coverage Status](https://coveralls.io/repos/github/BlackDilvish/CovidLocalizations/badge.png?branch=master)](https://coveralls.io/github/BlackDilvish/CovidLocalizations?branch=master)
 ## Participants 
-- Gabriel Naleźnik - team leader
-- Olga Kubiszyn
-- Wojciech Gomułka
-- Jan Zajda
+- [Gabriel Naleźnik](https://github.com/BlackDilvish) - team leader
+- [Olga Kubiszyn](https://github.com/olgaaaglo)
+- [Wojciech Gomułka](https://github.com/Excavelty)
+- [Jan Zajda](https://github.com/Grzybiarz47)
 ### Do you need more people: No
 
 ## Short description of the idea:
