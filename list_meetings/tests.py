@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib import auth
 from . import views
 import copy
 
@@ -14,7 +15,7 @@ class ListMeetingsTestCase(TestCase):
             }
         }
 
-    def test_list_meetings_empty(self):
+    def test_list_meetings_not_logged(self):
         response = self.client.post(path = '/list-meetings/', 
                                     data = {'choose_month': '', 'choose_year': ''})
 
@@ -22,10 +23,26 @@ class ListMeetingsTestCase(TestCase):
         self.assertIn(info, response.content)
         self.assertEqual(response.status_code, 200)
 
-    def test_list_meetings_noempty(self):
-        response = self.client.post(path = '/list-meetings/', 
+    def test_list_meetings_logged_empty(self):
+        logged_client = Client()
+        logged_client.login(username='test_user', password='tester123')
+
+        response = logged_client.post(path = '/list-meetings/', 
+                                    data = {'choose_month': 'January', 'choose_year': '2019'})
+
+        info = b'There are no confirmed close contacts with you! Nevertheless we ask you to check it daily.'
+        self.assertIn(info, response.content)
+        self.assertEqual(response.status_code, 200)
+
+    def test_list_meetings_logged_noempty(self):
+        logged_client = Client()
+        logged_client.login(username='test_user', password='tester123')
+
+        response = logged_client.post(path = '/list-meetings/', 
                                     data = {'choose_month': 'January', 'choose_year': '2020'})
 
+        self.assertIn(b'Distance to person', response.content)
+        self.assertIn(b'Check details and map', response.content)
         self.assertEqual(response.status_code, 200)
 
     def test_contact(self):
