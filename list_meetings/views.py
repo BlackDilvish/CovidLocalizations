@@ -43,7 +43,10 @@ def contact(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
 
 
 def by_distance(contact):
-    return float(contact['distance'])
+    if 'distance' in contact:
+        return float(contact['distance'])
+    else:
+        return False
 
 
 def map_contacts_locations(contacts):
@@ -62,7 +65,6 @@ def clear_contacts(contacts):
 def get_contacts(name, file_date):
     localizations = get_localizations(name, file_date)
     contacts = list()
-    
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
         status = HealthStatus.objects.get(name=localization['name'])

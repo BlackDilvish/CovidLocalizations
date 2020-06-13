@@ -3,6 +3,8 @@ from datetime import date
 import os
 from . import views
 from . import models
+from local_hist import tests as test_data
+from datetime import date
 
 class LocalizatorTestViews(TestCase):
     def setUp(self):
@@ -62,9 +64,12 @@ class LocalizatorTestViews(TestCase):
         response = self.client.get('/instruction')
         self.assertEqual(response.status_code, 200)
 
-    def test_convert_date(self):
+    def test_convert_date_empty(self):
         converted = views.convert_date('')
         self.assertEqual(converted, date.today())
+        
+    def test_convert_date(self):
+        self.assertEqual(views.convert_date('2020-06-13'), date(2020, 6, 13))
 
     def test_validate_json(self):
         with open('test.json', 'w+') as f:
@@ -74,7 +79,22 @@ class LocalizatorTestViews(TestCase):
         os.remove('test.json')
         
         self.assertEqual(validated, False)
-
+        
+    def test_prepare_contacts(self):
+        json = test_data.activity_full_data
+        contacts = [{"location" : {"latitudeE7" : 0, "longitudeE7" : 1}}]
+        views.prepare_contacts(contacts, json)
+        self.assertEqual(len(contacts), 0)
+        
+    def test_execute_mail(self):
+        contacts = [{"location" : {"latitudeE7" : 0, "longitudeE7" : 0}, 
+        "user_loc" : {"latitude" : "2", "longitude" : "3"}, "infected_act" : "4", 
+        "user_act" : "5", "near" : "6", "duration" : "7"}]
+        views.execute_mail(contacts, "someone@gmail.com")
+        self.assertEqual(contacts[0]["url"], "https://covidlocalizations.herokuapp.com/list-meetings/contact/0.0/0.0/2/3/4/5/6/7")
+        
+    def test_check_if_met_sick_person(self):
+        self.assertFalse(views.check_if_met_sick_person({"timelineObjects" : {}}, "May2018", "someone", "someone@gmail.com"))
 
 class LocalizatorTestModels(TestCase):
     def setUp(self):

@@ -35,7 +35,9 @@ class LocalHistTestCase(TestCase):
     def test_history(self):
         item = TestItem()
         hist = []
-        item.data = {"timelineObjects": [{"activitySegment": {"duration": {"endTimestampMs": "1591099885000"}}}, {"placeVisit": {"location": {"longitudeE7": 123456789}}}]}
+        item.data = {"timelineObjects": [{"activitySegment": {"duration": 
+        {"endTimestampMs": "1591099885000"}}}, 
+        {"placeVisit": {"location": {"longitudeE7": 123456789}}}]}
         hist.append(item)
         self.assertEqual(len(views.history(hist)), 2)
 	
