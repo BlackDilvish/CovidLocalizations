@@ -42,21 +42,6 @@ def contact(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
                              'near': near, 'duration': duration})
 
 
-def external(request, lat1, lon1, lat2, lon2, inf_act, user_act, near, duration):
-    username = request.user.username
-    params = urllib.urlencode({'mapid': "mapid", 'lat1': lat1,
-                   'lon1': lon1, 'lat2': lat2,
-                   'lon2': lon2, 'name': username,
-                   'inf_act': inf_act, 'user_act': user_act,
-                   'near': near, 'duration': duration})
-    return render(request, 'list_meetings/contact.html',
-                  {'mapid': "mapid", 'lat1': lat1,
-                   'lon1': lon1, 'lat2': lat2,
-                   'lon2': lon2, 'name': username,
-                   'inf_act': inf_act, 'user_act': user_act,
-                   'near': near, 'duration': duration})
-
-
 def by_distance(contact):
     return float(contact['distance'])
 
