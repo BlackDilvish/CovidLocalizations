@@ -50,7 +50,7 @@ class LocalHistTestCase(TestCase):
         
     def test_item_activity_full(self):
         item = TestItem()
-        item.data = activity_full_data;
+        item.data = activity_full_data
         self.assertEqual(len(views.item_activity(item, 0)), 10)    
         
     def test_item_visit(self):
@@ -62,7 +62,7 @@ class LocalHistTestCase(TestCase):
         
     def test_item_visit_full(self):
         item = TestItem()
-        item.data = visit_full_data;
+        item.data = visit_full_data
         self.assertEqual(len(views.item_visit(item, 0)), 7)
     
     def test_convert_time(self):

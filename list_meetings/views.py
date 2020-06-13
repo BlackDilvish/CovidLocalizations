@@ -77,7 +77,7 @@ def clear_contacts(contacts):
 def get_contacts(name, file_date):
     localizations = get_localizations(name, file_date)
     contacts = list()
-
+    
     for localization in localizations:
         timeline_objects = localization['data']['timelineObjects']
         status = HealthStatus.objects.get(name=localization['name'])
