@@ -55,6 +55,8 @@ def check_if_met_sick_person(json_data, file_date, name, email):
     contacts = contacts[:10]
     if len(contacts):
         execute_mail(contacts, email)
+    else:
+        return False
 
 
 def prepare_contacts(contacts, json_data):
