@@ -107,6 +107,10 @@ class LocalizatorTestViews(TestCase):
                                                               start_date=date.today(), end_date=date.today()))
         self.assertEqual(response.status_code, 200)
 
+    def test_status_post_for_not_infected(self):
+        response = self.client.post(path='/status', data=dict(save=True, infected_present="not_clicked",
+                                                              infected_past="not_clicked"))
+        self.assertEqual(response.status_code, 200)
 
 class LocalizatorTestModels(TestCase):
     def setUp(self):
