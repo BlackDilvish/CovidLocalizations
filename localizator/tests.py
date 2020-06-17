@@ -112,6 +112,11 @@ class LocalizatorTestViews(TestCase):
                                                               infected_past="not_clicked"))
         self.assertEqual(response.status_code, 200)
 
+    def test_if_check_upload_reacts_for_test_user_which_already_uploaded(self):
+        response = self.client.post(path='/upload', data=dict(name="test"))
+        self.assertEqual(response.status_code, 200)
+
+
 class LocalizatorTestModels(TestCase):
     def setUp(self):
         pass
