@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from datetime import date
 import os
+import json
 from . import views
 from . import models
 from local_hist import tests as test_data
@@ -95,6 +96,17 @@ class LocalizatorTestViews(TestCase):
         
     def test_check_if_met_sick_person(self):
         self.assertFalse(views.check_if_met_sick_person({"timelineObjects" : {}}, "May2018", "someone", "someone@gmail.com"))
+
+    def test_status_post_for_present_infected_person(self):
+        response = self.client.post(path='/status', data=dict(save=True, infected_present="clicked",
+                                                              start_date=date.today()))
+        self.assertEqual(response.status_code, 200)
+
+    def test_status_post_for_past_infected_person(self):
+        response = self.client.post(path='/status', data=dict(save=True, infected_past="clicked",
+                                                              start_date=date.today(), end_date=date.today()))
+        self.assertEqual(response.status_code, 200)
+
 
 class LocalizatorTestModels(TestCase):
     def setUp(self):

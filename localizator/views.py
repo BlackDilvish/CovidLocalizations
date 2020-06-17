@@ -184,7 +184,6 @@ def validate_json(json_string):
         return text
     except ValueError:
         return False
-    return True
 
 
 def get_error_validation():
