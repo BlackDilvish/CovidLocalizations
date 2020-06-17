@@ -117,6 +117,14 @@ class LocalizatorTestViews(TestCase):
         result_str = result_list[0]
         self.assertEqual(result_str, "You've already uploaded your localizations from:")
 
+    def test_post_upload_with_file(self):
+        #idea of tesing with files based on: https://stackoverflow.com/a/8049772
+        file_name = os.path.join(os.path.dirname(__file__), 'example_file.json')
+
+        with open(file_name) as example_file:
+            response = self.client.post(path='/upload', data=dict(files=dict(uplfile=example_file)))
+        self.assertEqual(response.status_code, 200)
+
 
 class LocalizatorTestModels(TestCase):
     def setUp(self):
