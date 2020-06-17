@@ -112,9 +112,10 @@ class LocalizatorTestViews(TestCase):
                                                               infected_past="not_clicked"))
         self.assertEqual(response.status_code, 200)
 
-    def test_if_check_upload_reacts_for_test_user_which_already_uploaded(self):
-        response = self.client.get(path='/upload', data=dict(name="asd"))
-        self.assertEqual(response.status_code, 200)
+    def test_if_check_upload_returns_correct_str_for_test_user_which_already_uploaded(self):
+        result_list = views.check_upload(name="asd")
+        result_str = result_list[0]
+        self.assertEqual(result_str, "You've already uploaded your localizations from:")
 
 
 class LocalizatorTestModels(TestCase):
