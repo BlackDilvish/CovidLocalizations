@@ -120,9 +120,12 @@ class LocalizatorTestViews(TestCase):
     def test_post_upload_with_file(self):
         #idea of tesing with files based on: https://stackoverflow.com/a/8049772
         file_name = os.path.join(os.path.dirname(__file__), 'example_file.json')
+        logged_client = Client()
+        logged_client.login(username='test_user', password='tester123')
 
         with open(file_name) as example_file:
-            response = self.client.post(path='/upload', data=dict(files=dict(uplfile=example_file)))
+            response = logged_client.post(path='/upload', data=dict(choose_month="june", choose_year=2020,
+                                                                  uplfile=example_file))
         self.assertEqual(response.status_code, 200)
 
 
