@@ -68,7 +68,7 @@ def convert(output):
 			elif isinstance(val, int):
 				item[key] = round(float(val / divider), precision)
 		if "Waypoints" in item:
-		    if "Start_latitude" in item and "Start_longitude" in item and \ 
+		    if "Start_latitude" in item and "Start_longitude" in item and \
 		       "End_latitude" in item and "End_longitude" in item:
 			    item["Waypoints"] = prepare_waypoints(item["Waypoints"], 
 								  [item["Start_latitude"], item["Start_longitude"]], 
