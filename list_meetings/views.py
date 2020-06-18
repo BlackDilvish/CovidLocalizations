@@ -182,7 +182,8 @@ def set_distance_place(contact, timeline_object):
         	contact['near'] = 0
 
 
-    #thanks to: https://stackoverflow.com/a/43211266, Kurt Peek for geopy distance calculation idea, licnse(as Stack Overflow answer):
+    #thanks to: https://stackoverflow.com/a/43211266, Kurt Peek for geopy distance calculation idea, 
+    #licnse(as Stack Overflow answer):
     #https://creativecommons.org/licenses/by-sa/3.0/, thus this modifed code has to be available under same license
 def set_distance_activity(contact, timeline_object):
     first_long = int(timeline_object['startLocation']['longitudeE7']) / divider
