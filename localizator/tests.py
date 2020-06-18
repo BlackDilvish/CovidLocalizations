@@ -92,7 +92,8 @@ class LocalizatorTestViews(TestCase):
         "user_loc" : {"latitude" : "2", "longitude" : "3"}, "infected_act" : "4", 
         "user_act" : "5", "near" : "6", "duration" : "7"}]
         views.execute_mail(contacts, "someone@gmail.com")
-        self.assertEqual(contacts[0]["url"], "https://covidlocalizations.herokuapp.com/list-meetings/contact/0.0/0.0/2/3/4/5/6/7")
+        self.assertEqual(contacts[0]["url"], 
+                         "https://covidlocalizations.herokuapp.com/list-meetings/contact/0.0/0.0/2/3/4/5/6/7")
         
     def test_check_if_met_sick_person(self):
         self.assertFalse(views.check_if_met_sick_person({"timelineObjects" : {}}, "May2018", "someone", "someone@gmail.com"))
