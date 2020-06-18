@@ -118,7 +118,6 @@ class LocalizatorTestViews(TestCase):
         self.assertEqual(result_str, "You've already uploaded your localizations from:")
 
     def test_post_upload_with_file(self):
-        #idea of tesing with files based on: https://stackoverflow.com/a/8049772
         file_name = os.path.join(os.path.dirname(__file__), 'example_file.json')
         logged_client = Client()
         logged_client.login(username='test_user', password='tester123')
