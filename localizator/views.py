@@ -128,11 +128,13 @@ def status(response):
         if status == False:
             HealthStatus.objects.filter(name=name).delete()
             t.save()
-            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
+            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), 
+                                                              "status_info":check_status(name)})
         elif status == True and check_status_dates(start_date, end_date):
             HealthStatus.objects.filter(name=name).delete()
             t.save()
-            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), "status_info":check_status(name)})
+            return render(response, "localizator/home.html", {"name":name, "upload_info":check_upload(name), 
+                                                              "status_info":check_status(name)})
         else:
             return render(response, 'localizator/status.html', {"name":name, "error_date_message":get_error_date()})
 
